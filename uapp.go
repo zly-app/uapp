@@ -12,6 +12,16 @@ import (
 )
 
 func NewApp(appName string, opts ...zapp.Option) core.IApp {
+	allOpts := []zapp.Option{
+		zapp.WithCustomComponent(makeCustomComponent), // 自定义组件
+		zapp.WithEnableDaemon(),                       // 启用守护进程
+		zapp.WithIgnoreInjectOfDisablePlugin(true),    // 忽略未启用的插件注入
+		zapp.WithIgnoreInjectOfDisableService(true),   // 忽略未启用的服务注入
+
+		// zipokinotel
+		// honey
+	}
+
 	apolloConfig := &config.ApolloConfig{
 		Address:                 os.Getenv("ApolloAddress"),
 		AppId:                   utils.Ternary.Or(os.Getenv("ApolloAppId"), appName).(string),
@@ -32,18 +42,11 @@ func NewApp(appName string, opts ...zapp.Option) core.IApp {
 	if namespaces != "" {
 		apolloConfig.Namespaces = strings.Split(namespaces, ",")
 	}
-
-	allOpts := []zapp.Option{
-		zapp.WithCustomComponent(makeCustomComponent), // 自定义组件
-		zapp.WithEnableDaemon(),                       // 启用守护进程
-		zapp.WithIgnoreInjectOfDisablePlugin(true),    // 忽略未启用的插件注入
-		zapp.WithIgnoreInjectOfDisableService(true),   // 忽略未启用的服务注入
-
-		zapp.WithConfigOption(config.WithApollo(apolloConfig)), // 添加apollo配置
-
-		// zipokinotel
-		// honey
+	// 添加apollo配置
+	if apolloConfig.Address != "" {
+		allOpts = append(allOpts, zapp.WithConfigOption(config.WithApollo(apolloConfig)))
 	}
+
 	allOpts = append(allOpts, opts...)
 	app := zapp.NewApp(appName, allOpts...)
 	return app
