@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/spf13/cast"
+	"github.com/zly-app/plugin/zipkinotel"
 	"github.com/zly-app/zapp"
 	"github.com/zly-app/zapp/config"
 	"github.com/zly-app/zapp/core"
@@ -18,7 +19,7 @@ func NewApp(appName string, opts ...zapp.Option) core.IApp {
 		zapp.WithIgnoreInjectOfDisablePlugin(true),    // 忽略未启用的插件注入
 		zapp.WithIgnoreInjectOfDisableService(true),   // 忽略未启用的服务注入
 
-		// zipokinotel
+		zipkinotel.WithPlugin(),
 		// honey
 	}
 
