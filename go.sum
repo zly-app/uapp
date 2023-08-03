@@ -738,8 +738,8 @@ github.com/zly-app/zapp v1.1.9/go.mod h1:MszpwW6QqAhZZRAKo9UtzT4eaYXkyCMpGuRKBsH
 github.com/zly-app/zapp v1.1.11/go.mod h1:itTp7wuwF18fUw0/WvLO13Gid/NpiZmnkUBxtHegW5Q=
 github.com/zly-app/zapp v1.1.16/go.mod h1:0xOFkGfjg5ammcCOdPxqmdXc1lErw+6ABb/yozW9Djk=
 github.com/zly-app/zapp v1.3.2/go.mod h1:SpUxksSSDYnwK+vHhObro4a49TyAkQps+9diVVfFIbc=
-github.com/zly-app/zapp v1.3.4 h1:1ZisXg5QDoLms8GVlgz9Yph4hX5epfkSFSvbcC7zzyM=
-github.com/zly-app/zapp v1.3.4/go.mod h1:SpUxksSSDYnwK+vHhObro4a49TyAkQps+9diVVfFIbc=
+github.com/zly-app/zapp v1.3.5-0.20230803073140-5bfa59d58952 h1:A0RjMSRhgpb+T+r89hhc979Tq83jY5/5pH00jprUSlU=
+github.com/zly-app/zapp v1.3.5-0.20230803073140-5bfa59d58952/go.mod h1:SpUxksSSDYnwK+vHhObro4a49TyAkQps+9diVVfFIbc=
 github.com/zlyuancn/zretry v0.0.0-20220514032503-d78bfd22a441 h1:Sw0KI54iN5+zLL74vWx9R1o9S1yWc+f3oRKOjKrMCqA=
 github.com/zlyuancn/zretry v0.0.0-20220514032503-d78bfd22a441/go.mod h1:nXpt3JELMAirMyc5KExlSX96ixpohjHkxHpJlhqRnUU=
 go.etcd.io/bbolt v1.3.2/go.mod h1:IbVyRI1SCnLcuJnV2u8VeU0CEYM7e686BmAb1XKL+uU=

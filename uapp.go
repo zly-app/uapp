@@ -5,10 +5,13 @@ import (
 	"strings"
 
 	"github.com/spf13/cast"
+	"github.com/spf13/viper"
 	"github.com/zly-app/plugin/honey"
 	"github.com/zly-app/plugin/zipkinotel"
+
 	"github.com/zly-app/zapp"
 	"github.com/zly-app/zapp/config"
+	"github.com/zly-app/zapp/consts"
 	"github.com/zly-app/zapp/core"
 	"github.com/zly-app/zapp/pkg/utils"
 )
@@ -21,9 +24,53 @@ func NewApp(appName string, opts ...zapp.Option) core.IApp {
 		zapp.WithIgnoreInjectOfDisableService(true),   // 忽略未启用的服务注入
 
 		zipkinotel.WithPlugin(), // trace
-		honey.WithPlugin(), // log
+		honey.WithPlugin(),      // log
 	}
 
+	// 添加apollo配置
+	if confVi, ok := makeUAppConfig(appName); ok {
+		allOpts = append(allOpts, zapp.WithConfigOption(config.WithViper(confVi)))
+	}
+
+	allOpts = append(allOpts, opts...)
+	app := zapp.NewApp(appName, allOpts...)
+	return app
+}
+
+// 生成uApp配置
+func makeUAppConfig(appName string) (*viper.Viper, bool) {
+	backupFile := os.Getenv("ApolloBackupFile")
+	if backupFile != "" {
+		backupFile += ".uapp"
+	}
+	uAppApolloConfig := &config.ApolloConfig{
+		Address:                 os.Getenv("ApolloAddress"),
+		AppId:                   utils.Ternary.Or(os.Getenv("ApolloUAppID"), "uapp").(string),
+		AccessKey:               os.Getenv("ApolloAccessKey"),
+		AuthBasicUser:           os.Getenv("ApolloAuthBasicUser"),
+		AuthBasicPassword:       os.Getenv("ApolloAuthBasicPassword"),
+		Cluster:                 utils.Ternary.Or(os.Getenv("ApolloCluster"), "default").(string),
+		AlwaysLoadFromRemote:    cast.ToBool(os.Getenv("ApolloAlwaysLoadFromRemote")),
+		BackupFile:              backupFile,
+		ApplicationDataType:     os.Getenv("ApolloApplicationDataType"),
+		ApplicationParseKeys:    nil,
+		Namespaces:              nil,
+		IgnoreNamespaceNotFound: false,
+	}
+	if uAppApolloConfig.Address == "" {
+		return nil, false
+	}
+
+	conf := config.NewConfig(uAppApolloConfig.AppId, config.WithApollo(uAppApolloConfig), config.WithoutFlag(uAppApolloConfig))
+	vi := conf.GetViper()
+
+	zAppApolloConfig := getApolloConfigFromEnv(appName)
+	vi.Set(consts.ApolloConfigKey, zAppApolloConfig)
+	return vi, true
+}
+
+// 从环境变量中获取apollo配置
+func getApolloConfigFromEnv(appName string) *config.ApolloConfig {
 	apolloConfig := &config.ApolloConfig{
 		Address:                 os.Getenv("ApolloAddress"),
 		AppId:                   utils.Ternary.Or(os.Getenv("ApolloAppId"), appName).(string),
@@ -34,7 +81,7 @@ func NewApp(appName string, opts ...zapp.Option) core.IApp {
 		AlwaysLoadFromRemote:    cast.ToBool(os.Getenv("ApolloAlwaysLoadFromRemote")),
 		BackupFile:              os.Getenv("ApolloBackupFile"),
 		ApplicationDataType:     os.Getenv("ApolloApplicationDataType"),
-		IgnoreNamespaceNotFound: cast.ToBool(os.Getenv("ApolloIgnoreNamespaceNotFound")),
+		IgnoreNamespaceNotFound: true,
 	}
 	applicationParseKeys := os.Getenv("ApolloApplicationParseKeys")
 	if applicationParseKeys != "" {
@@ -44,12 +91,5 @@ func NewApp(appName string, opts ...zapp.Option) core.IApp {
 	if namespaces != "" {
 		apolloConfig.Namespaces = strings.Split(namespaces, ",")
 	}
-	// 添加apollo配置
-	if apolloConfig.Address != "" {
-		allOpts = append(allOpts, zapp.WithConfigOption(config.WithApollo(apolloConfig)))
-	}
-
-	allOpts = append(allOpts, opts...)
-	app := zapp.NewApp(appName, allOpts...)
-	return app
+	return apolloConfig
 }
