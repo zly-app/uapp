@@ -1,17 +1,58 @@
+<!-- TOC -->
+
+- [开始](#开始)
+- [提供的功能](#提供的功能)
+  - [组件](#组件)
+  - [插件](#插件)
+- [apollo 配置说明](#apollo-配置说明)
+
+<!-- /TOC -->
+
 ---
 
-一个基于 [zapp](https://github.com/zly-app/zapp) 封装的模板库, 提供了常见的组件, log, trace, 提供了默认连接到 apollo
-配置等功能.
+一个基于 [zapp](https://github.com/zly-app/zapp) 封装的模板库, 提供了常见的组件, log, trace, 提供了默认连接到 apollo配置等功能.
 
 # 开始
 
-# 配置说明
+使用和 `zapp` 没什么区别
 
-目前 uapp 主要支持 apollo 配置.
+```go
+app := uapp.NewApp("zapp.test")
+defer app.Exit()
 
-首先程序启动时从 apollo 中 uapp 项目中拉取配置数据. 然后从 apollo 中当前项目中拉取配置数据, 当前项目是指当前运行程序指定的appName. 相当于 uapp 项目中的配置作为一个基础配置数据, 使用者可以在自己的项目中覆盖这些配置数据.
+c := uapp.GetComponent() // 获取组件
+```
 
-uapp 通过环境变量读取 apollo 配置数据.
+# 提供的功能
+
+## 组件
+
++ [x] [es7](https://github.com/zly-app/component/tree/master/es7)
++ [x] [redis](https://github.com/zly-app/component/tree/master/redis)
++ [x] [sqlx](https://github.com/zly-app/component/tree/master/sqlx)
++ [x] [xorm](https://github.com/zly-app/component/tree/master/xorm)
++ [x] [cache 透明读缓存](https://github.com/zly-app/cache)
+
+## 插件
+
++ [x] [zipkinotel 链路上报](https://github.com/zly-app/plugin/tree/master/zipkinotel)
++ [x] [honey 日志收集](https://github.com/zly-app/plugin/tree/master/honey)
+
+# apollo 配置说明
+
+目前 `uapp` 主要支持 `apollo` 配置. 一旦你使用了 `apollo` 配置则不再支持其它任何形式的配置.
+
+首先在 `apollo` 创建一个 `uapp` 项目.
+
+![](src/assets/example/create_uapp.png)
+
+然后在 `application` 中添加好相关配置. 其格式默认为 `yaml`
+
+![](src/assets/example/uapp_config.png)
+
+此时 `uapp` 配置就完成了.
+
+但是现在 `uapp` 还没有接入 `apollo`, 因为没有告诉 `uapp` 如何连接到 `apollo`, 需要在环境变量中配置 `ApolloAddress`, 具体环境变量说明如下:
 
 | 变量名                     | 是否必须 | 描述                                                                                                   | 默认值    |
 | -------------------------- | -------- | ------------------------------------------------------------------------------------------------------ | --------- |
@@ -25,11 +66,9 @@ uapp 通过环境变量读取 apollo 配置数据.
 | ApolloAlwaysLoadFromRemote | 否       | 总是从远程获取, 在远程加载失败时不会从备份文件加载                                                     | false     |
 | ApolloBackupFile           | 否       | 备份文件名                                                                                             |           |
 | ApolloApplicationDataType  | 否       | application命名空间下key的值的数据类型, 支持yaml,yml,toml,json                                         | yaml      |
-| ApolloApplicationParseKeys | 否       | application命名空间下哪些key数据会被解析, 无论如何默认的key(frame/components/plugins/services)会被解析 | yaml      |
+| ApolloApplicationParseKeys | 否       | application命名空间下哪些key数据会被解析, 无论如何默认的key(frame/components/plugins/services)会被解析 |           |
 | ApolloNamespaces           | 否       | 其他自定义命名空间                                                                                     |           |
 
+环境配置完成后就可以启动程序了.
 
-
-
-
-
+程序启动时 `upp` 从环境变量中读取 `apollo` 的地址, 如果存在 `${ApolloAddress}`则从 `apollo` 的 `${ApolloUAppID}` 项目中拉取配置数据. 然后从 `apollo` 中 `${ApolloAppId}` 项目中拉取配置数据(如果有的话), 如果有重复配置会覆盖掉 `uapp` 的配置. 相当于 `uapp` 的配置作为一个基础配置数据.
