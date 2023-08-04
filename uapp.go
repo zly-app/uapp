@@ -8,6 +8,7 @@ import (
 	"github.com/spf13/viper"
 	"github.com/zly-app/plugin/honey"
 	"github.com/zly-app/plugin/zipkinotel"
+	"github.com/zlyuancn/zstr"
 
 	"github.com/zly-app/zapp"
 	"github.com/zly-app/zapp/config"
@@ -64,13 +65,20 @@ func makeUAppConfig(appName string) (*viper.Viper, bool) {
 	conf := config.NewConfig(uAppApolloConfig.AppId, config.WithApollo(uAppApolloConfig), config.WithoutFlag(uAppApolloConfig))
 	vi := conf.GetViper()
 
-	zAppApolloConfig := getApolloConfigFromEnv(appName)
-	vi.Set(consts.ApolloConfigKey, zAppApolloConfig)
+	zAppApolloConfig, ok := getApolloConfigFromEnv(appName)
+	if ok {
+		vi.Set(consts.ApolloConfigKey, zAppApolloConfig)
+	}
 	return vi, true
 }
 
 // 从环境变量中获取apollo配置
-func getApolloConfigFromEnv(appName string) *config.ApolloConfig {
+func getApolloConfigFromEnv(appName string) (*config.ApolloConfig, bool) {
+	ok := zstr.GetBool(os.Getenv("ApolloAppDisable"))
+	if !ok {
+		return nil, false
+	}
+
 	apolloConfig := &config.ApolloConfig{
 		Address:                 os.Getenv("ApolloAddress"),
 		AppId:                   utils.Ternary.Or(os.Getenv("ApolloAppId"), appName).(string),
@@ -91,5 +99,5 @@ func getApolloConfigFromEnv(appName string) *config.ApolloConfig {
 	if namespaces != "" {
 		apolloConfig.Namespaces = strings.Split(namespaces, ",")
 	}
-	return apolloConfig
+	return apolloConfig, true
 }

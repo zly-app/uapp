@@ -13,6 +13,7 @@ require (
 	github.com/zly-app/plugin/honey v0.2.7
 	github.com/zly-app/plugin/zipkinotel v0.0.3
 	github.com/zly-app/zapp v1.3.5-0.20230803073140-5bfa59d58952
+	github.com/zlyuancn/zstr v0.0.0-20230412074414-14d6b645962f
 )
 
 require (
