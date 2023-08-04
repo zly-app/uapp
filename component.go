@@ -52,6 +52,7 @@ func makeCustomComponent(app core.IApp) core.IComponent {
 	}
 }
 
+// 获取组件
 func GetComponent() IComponent {
 	c := component.GetComponent()
 	return c.(IComponent)
