@@ -29,6 +29,7 @@ c := uapp.GetComponent() // 获取组件
 ## 组件
 
 + [x] [es7](https://github.com/zly-app/component/tree/master/es7)
++ [x] [mongo](https://github.com/zly-app/component/tree/master/mongo)
 + [x] [redis](https://github.com/zly-app/component/tree/master/redis)
 + [x] [sqlx](https://github.com/zly-app/component/tree/master/sqlx)
 + [x] [xorm](https://github.com/zly-app/component/tree/master/xorm)
