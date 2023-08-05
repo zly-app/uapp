@@ -3,17 +3,19 @@ module github.com/zly-app/uapp
 go 1.19
 
 require (
+	github.com/jmoiron/sqlx v1.2.0
+	github.com/olivere/elastic/v7 v7.0.22
 	github.com/spf13/cast v1.3.0
 	github.com/spf13/viper v1.7.1
 	github.com/zly-app/cache v0.0.3-0.20230803122342-c9c1d6cee028
 	github.com/zly-app/component/es7 v0.0.0-20230803115002-926ba89df204
-	github.com/zly-app/component/redis v0.0.0-20230803115002-926ba89df204
+	github.com/zly-app/component/mongo v0.0.0-20230805054932-86e87a071391
+	github.com/zly-app/component/redis v0.0.0-20230804100428-bf01af0b175f
 	github.com/zly-app/component/sqlx v0.0.0-20230803115002-926ba89df204
 	github.com/zly-app/component/xorm v0.0.0-20230803115002-926ba89df204
 	github.com/zly-app/plugin/honey v0.2.7
 	github.com/zly-app/plugin/zipkinotel v0.0.3
 	github.com/zly-app/zapp v1.3.5-0.20230803073140-5bfa59d58952
-	github.com/zlyuancn/zstr v0.0.0-20230412074414-14d6b645962f
 )
 
 require (
@@ -50,7 +52,6 @@ require (
 	github.com/iris-contrib/jade v1.1.4 // indirect
 	github.com/iris-contrib/middleware/cors v0.0.0-20210110101738-6d0a4d799b5d // indirect
 	github.com/iris-contrib/schema v0.0.6 // indirect
-	github.com/jmoiron/sqlx v1.2.0 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/kataras/blocks v0.0.4 // indirect
@@ -69,7 +70,7 @@ require (
 	github.com/mitchellh/mapstructure v1.1.2 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
-	github.com/olivere/elastic/v7 v7.0.22 // indirect
+	github.com/montanaflynn/stats v0.0.0-20171201202039-1bf9dbcd8cbe // indirect
 	github.com/opentracing/opentracing-go v1.2.0 // indirect
 	github.com/openzipkin/zipkin-go v0.4.1 // indirect
 	github.com/pelletier/go-toml v1.2.0 // indirect
@@ -90,10 +91,15 @@ require (
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/vmihailenco/msgpack/v5 v5.3.5 // indirect
 	github.com/vmihailenco/tagparser/v2 v2.0.0 // indirect
+	github.com/xdg-go/pbkdf2 v1.0.0 // indirect
+	github.com/xdg-go/scram v1.1.2 // indirect
+	github.com/xdg-go/stringprep v1.0.4 // indirect
 	github.com/yosssi/ace v0.0.5 // indirect
+	github.com/youmark/pkcs8 v0.0.0-20181117223130-1be2e3e5546d // indirect
 	github.com/zly-app/honey v0.2.7 // indirect
 	github.com/zly-app/service/api v0.0.0-20220430055931-779fb32fc812 // indirect
 	github.com/zlyuancn/zretry v0.0.0-20220514032503-d78bfd22a441 // indirect
+	go.mongodb.org/mongo-driver v1.12.1 // indirect
 	go.opentelemetry.io/otel v1.13.0 // indirect
 	go.opentelemetry.io/otel/bridge/opentracing v1.13.0 // indirect
 	go.opentelemetry.io/otel/metric v0.35.0 // indirect
@@ -105,8 +111,9 @@ require (
 	go.uber.org/zap v1.21.0 // indirect
 	golang.org/x/crypto v0.0.0-20221010152910-d6f0a8c073c2 // indirect
 	golang.org/x/net v0.0.0-20221004154528-8021a29435af // indirect
+	golang.org/x/sync v0.0.0-20220923202941-7f9b1623fab7 // indirect
 	golang.org/x/sys v0.0.0-20221010170243-090e33056c14 // indirect
-	golang.org/x/text v0.3.8 // indirect
+	golang.org/x/text v0.7.0 // indirect
 	golang.org/x/time v0.0.0-20200630173020-3af7569d3a1e // indirect
 	google.golang.org/protobuf v1.28.1 // indirect
 	gopkg.in/ini.v1 v1.62.0 // indirect

@@ -55,21 +55,20 @@ c := uapp.GetComponent() // 获取组件
 
 但是现在 `uapp` 还没有接入 `apollo`, 因为没有告诉 `uapp` 如何连接到 `apollo`, 需要在环境变量中配置 `ApolloAddress`,具体环境变量说明如下:
 
-| 变量名                     | 是否必须 | 描述                                                                                                                                      | 默认值    |
-| -------------------------- | -------- | ----------------------------------------------------------------------------------------------------------------------------------------- | --------- |
-| ApolloAddress              | 是       | apollo-api地址, 多个地址用英文逗号连接                                                                                                    |           |
-| ApolloUAppID               | 否       | uapp 应用名                                                                                                                               | uapp      |
-| ApolloAppDisable           | 否       | 如果设为true则当前应用不默认获取 apollo 配置, 但是 uapp 不受影响, 也就是 uapp 走apollo配置的同时还可以使用本地配置文件来覆盖 uapp 的配置. | uapp      | false |
-| ApolloAppId                | 否       | 当前应用名, 应用要覆盖 uapp 的配置                                                                                                        | \<app名\> |
-| ApolloAccessKey            | 否       | 验证key, 优先级高于基础认证                                                                                                               |           |
-| ApolloAuthBasicUser        | 否       | 基础认证用户名, 可用于nginx的基础认证扩展                                                                                                 |           |
-| ApolloAuthBasicPassword    | 否       | 基础认证密码                                                                                                                              |           |
-| ApolloCluster              | 否       | 集群名                                                                                                                                    | default   |
-| ApolloAlwaysLoadFromRemote | 否       | 总是从远程获取, 在远程加载失败时不会从备份文件加载                                                                                        | false     |
-| ApolloBackupFile           | 否       | 备份文件名                                                                                                                                |           |
-| ApolloApplicationDataType  | 否       | application命名空间下key的值的数据类型, 支持yaml,yml,toml,json                                                                            | yaml      |
-| ApolloApplicationParseKeys | 否       | application命名空间下哪些key数据会被解析, 无论如何默认的key(frame/components/plugins/services)会被解析                                    |           |
-| ApolloNamespaces           | 否       | 其他自定义命名空间                                                                                                                        |           |
+| 变量名                     | 是否必须 | 描述                                                                                                   | 默认值    |
+| -------------------------- | -------- | ------------------------------------------------------------------------------------------------------ | --------- |
+| ApolloAddress              | 是       | apollo-api地址, 多个地址用英文逗号连接                                                                 |           |
+| ApolloUAppID               | 否       | uapp 应用名                                                                                            | uapp      |
+| ApolloAppId                | 否       | 当前应用名, 应用要覆盖 uapp 的配置                                                                     | \<app名\> |
+| ApolloAccessKey            | 否       | 验证key, 优先级高于基础认证                                                                            |           |
+| ApolloAuthBasicUser        | 否       | 基础认证用户名, 可用于nginx的基础认证扩展                                                              |           |
+| ApolloAuthBasicPassword    | 否       | 基础认证密码                                                                                           |           |
+| ApolloCluster              | 否       | 集群名                                                                                                 | default   |
+| ApolloAlwaysLoadFromRemote | 否       | 总是从远程获取, 在远程加载失败时不会从备份文件加载                                                     | false     |
+| ApolloBackupFile           | 否       | 备份文件名                                                                                             |           |
+| ApolloApplicationDataType  | 否       | application命名空间下key的值的数据类型, 支持yaml,yml,toml,json                                         | yaml      |
+| ApolloApplicationParseKeys | 否       | application命名空间下哪些key数据会被解析, 无论如何默认的key(frame/components/plugins/services)会被解析 |           |
+| ApolloNamespaces           | 否       | 其他自定义命名空间                                                                                     |           |
 
 环境配置完成后就可以启动程序了.
 

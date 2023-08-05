@@ -3,6 +3,7 @@ package uapp
 import (
 	"github.com/zly-app/cache"
 	"github.com/zly-app/component/es7"
+	"github.com/zly-app/component/mongo"
 	"github.com/zly-app/component/redis"
 	"github.com/zly-app/component/sqlx"
 	"github.com/zly-app/component/xorm"
@@ -14,6 +15,7 @@ type IComponent interface {
 	core.IComponent
 
 	es7.IES7
+	mongo.IMongoCreator
 	redis.IRedisCreator
 	sqlx.ISqlx
 	xorm.IXormCreator
@@ -24,6 +26,7 @@ type Component struct {
 	core.IComponent
 
 	es7.IES7
+	mongo.IMongoCreator
 	redis.IRedisCreator
 	sqlx.ISqlx
 	xorm.IXormCreator
@@ -34,6 +37,7 @@ func (c *Component) Close() {
 	c.IComponent.Close()
 
 	c.IES7.Close()
+	c.IMongoCreator.Close()
 	c.IRedisCreator.Close()
 	c.ISqlx.Close()
 	c.IXormCreator.Close()
@@ -45,6 +49,7 @@ func makeCustomComponent(app core.IApp) core.IComponent {
 		IComponent: app.GetComponent(),
 
 		IES7:          es7.NewES7(app),
+		IMongoCreator: mongo.NewMongoCreator(app),
 		IRedisCreator: redis.NewRedisCreator(app),
 		ISqlx:         sqlx.NewSqlx(app),
 		IXormCreator:  xorm.NewXormCreator(app),

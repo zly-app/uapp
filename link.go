@@ -4,6 +4,7 @@ import (
 	"github.com/jmoiron/sqlx"
 	elastic7 "github.com/olivere/elastic/v7"
 	"github.com/zly-app/cache"
+	"github.com/zly-app/component/mongo"
 	"github.com/zly-app/component/redis"
 	"github.com/zly-app/component/xorm"
 	"github.com/zly-app/zapp/config"
@@ -14,6 +15,11 @@ import (
 // 获取默认es7客户端
 func GetDefES7() *elastic7.Client {
 	return GetComponent().GetDefES7()
+}
+
+// 获取默认mongo客户端
+func GetDefMongo() *mongo.Client {
+	return GetComponent().GetDefMongo()
 }
 
 // 获取默认redis客户端
