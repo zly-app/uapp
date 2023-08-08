@@ -12,7 +12,10 @@ import (
 	"github.com/zly-app/zapp/config"
 	"github.com/zly-app/zapp/consts"
 	"github.com/zly-app/zapp/core"
+	"github.com/zly-app/zapp/logger"
 	"github.com/zly-app/zapp/pkg/utils"
+	"github.com/zly-app/zapp/plugin/apollo_provider"
+	"go.uber.org/zap"
 )
 
 func NewApp(appName string, opts ...zapp.Option) core.IApp {
@@ -26,22 +29,24 @@ func NewApp(appName string, opts ...zapp.Option) core.IApp {
 		honey.WithPlugin(),      // log
 	}
 
-	// 添加apollo配置
-	if confVi, ok := makeUAppConfig(appName); ok {
-		allOpts = append(allOpts, zapp.WithConfigOption(config.WithViper(confVi)))
-	}
+	uAppOpts := makeUAppOpts(appName)
+	allOpts = append(allOpts, uAppOpts...)
 
 	allOpts = append(allOpts, opts...)
 	app := zapp.NewApp(appName, allOpts...)
 	return app
 }
 
-// 生成uApp配置
-func makeUAppConfig(appName string) (*viper.Viper, bool) {
+// 生成uApp选项
+func makeUAppOpts(appName string) []zapp.Option {
+	vi := viper.New()
+
 	backupFile := os.Getenv("ApolloBackupFile")
 	if backupFile != "" {
 		backupFile += ".uapp"
 	}
+
+	// uapp配置
 	uAppApolloConfig := &config.ApolloConfig{
 		Address:                 os.Getenv("ApolloAddress"),
 		AppId:                   utils.Ternary.Or(os.Getenv("ApolloUAppID"), "uapp").(string),
@@ -56,20 +61,55 @@ func makeUAppConfig(appName string) (*viper.Viper, bool) {
 		Namespaces:              nil,
 		IgnoreNamespaceNotFound: false,
 	}
-	if uAppApolloConfig.Address == "" {
-		return nil, false
+	if uAppApolloConfig.Address != "" {
+		uAppConf := config.NewConfig(uAppApolloConfig.AppId, config.WithApollo(uAppApolloConfig), config.WithoutFlag(uAppApolloConfig))
+		uAppConfigs := uAppConf.GetViper().AllSettings()
+		// 这里要去掉 apollo 配置, 否则zapp启动时仍然会从apollo中获取一次
+		delete(uAppConfigs, consts.ApolloConfigKey)
+		// 合并uapp配置
+		err := vi.MergeConfigMap(uAppConfigs)
+		if err != nil {
+			logger.Log.Fatal("合并'uapp配置'时错误", zap.Error(err))
+		}
 	}
 
-	conf := config.NewConfig(uAppApolloConfig.AppId, config.WithApollo(uAppApolloConfig), config.WithoutFlag(uAppApolloConfig))
-	vi := conf.GetViper()
+	// 应用配置
+	zAppApolloConfig, ok := getApolloConfigFromEnv(appName)
+	if ok {
+		vi.Set(consts.ApolloConfigKey, zAppApolloConfig) // 为应用配置写入apollo依据
+		opts := []zapp.Option{
+			zapp.WithConfigOption(config.WithViper(vi)), // 告诉zapp从这个vi中加载配置
+			apollo_provider.WithPlugin(true),            // 配置观察提供者--apollo
+		}
+		return opts
+	}
 
-	zAppApolloConfig := getApolloConfigFromEnv(appName)
-	vi.Set(consts.ApolloConfigKey, zAppApolloConfig)
-	return vi, true
+	// 用户自行处理应用配置
+	appConf := config.NewConfig(uAppApolloConfig.AppId, config.WithoutFlag(uAppApolloConfig))
+	err := vi.MergeConfigMap(appConf.GetViper().AllSettings())
+	if err != nil {
+		logger.Log.Fatal("合并用户自行处理的'应用配置'时错误", zap.Error(err))
+	}
+
+	opts := []zapp.Option{
+		zapp.WithConfigOption(config.WithViper(vi)), // 写入apollo中获取的配置
+	}
+	// 如果有 apollo 配置则开启 "配置观察提供者--apollo" 插件
+	if vi.IsSet(consts.ApolloConfigKey) {
+		opts = append(opts,
+			apollo_provider.WithPlugin(true), // 配置观察提供者--apollo
+		)
+	}
+	return opts
 }
 
 // 从环境变量中获取apollo配置
-func getApolloConfigFromEnv(appName string) *config.ApolloConfig {
+func getApolloConfigFromEnv(appName string) (*config.ApolloConfig, bool) {
+	disable := os.Getenv("ApolloDisableApolloApp")
+	if strings.ToLower(disable) == "true" {
+		return nil, false
+	}
+
 	apolloConfig := &config.ApolloConfig{
 		Address:                 os.Getenv("ApolloAddress"),
 		AppId:                   utils.Ternary.Or(os.Getenv("ApolloAppId"), appName).(string),
@@ -82,6 +122,9 @@ func getApolloConfigFromEnv(appName string) *config.ApolloConfig {
 		ApplicationDataType:     os.Getenv("ApolloApplicationDataType"),
 		IgnoreNamespaceNotFound: true,
 	}
+	if apolloConfig.Address == "" {
+		return nil, false
+	}
 	applicationParseKeys := os.Getenv("ApolloApplicationParseKeys")
 	if applicationParseKeys != "" {
 		apolloConfig.ApplicationParseKeys = strings.Split(applicationParseKeys, ",")
@@ -90,5 +133,5 @@ func getApolloConfigFromEnv(appName string) *config.ApolloConfig {
 	if namespaces != "" {
 		apolloConfig.Namespaces = strings.Split(namespaces, ",")
 	}
-	return apolloConfig
+	return apolloConfig, true
 }
