@@ -120,7 +120,7 @@ func getApolloConfigFromEnv(appName string) (*config.ApolloConfig, bool) {
 		AlwaysLoadFromRemote:    cast.ToBool(os.Getenv("ApolloAlwaysLoadFromRemote")),
 		BackupFile:              os.Getenv("ApolloBackupFile"),
 		ApplicationDataType:     os.Getenv("ApolloApplicationDataType"),
-		IgnoreNamespaceNotFound: true,
+		IgnoreNamespaceNotFound: cast.ToBool(os.Getenv("ApolloIgnoreNamespaceNotFound")),
 	}
 	if apolloConfig.Address == "" {
 		return nil, false

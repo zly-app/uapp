@@ -7,15 +7,16 @@ require (
 	github.com/olivere/elastic/v7 v7.0.22
 	github.com/spf13/cast v1.3.0
 	github.com/spf13/viper v1.7.1
-	github.com/zly-app/cache v0.0.3-0.20230803122342-c9c1d6cee028
+	github.com/zly-app/cache v0.0.3-0.20230814113731-dd2fc5b7ee3a
 	github.com/zly-app/component/es7 v0.0.0-20230803115002-926ba89df204
 	github.com/zly-app/component/mongo v0.0.0-20230805054932-86e87a071391
 	github.com/zly-app/component/redis v0.0.0-20230804100428-bf01af0b175f
 	github.com/zly-app/component/sqlx v0.0.0-20230803115002-926ba89df204
 	github.com/zly-app/component/xorm v0.0.0-20230803115002-926ba89df204
 	github.com/zly-app/plugin/honey v0.2.7
-	github.com/zly-app/plugin/zipkinotel v0.0.3
-	github.com/zly-app/zapp v1.3.5-0.20230803073140-5bfa59d58952
+	github.com/zly-app/plugin/zipkinotel v0.0.4-0.20230426111850-46dfe8802ab9
+	github.com/zly-app/zapp v1.3.5
+	go.uber.org/zap v1.21.0
 )
 
 require (
@@ -28,7 +29,10 @@ require (
 	github.com/andybalholm/brotli v1.0.1 // indirect
 	github.com/aymerick/douceur v0.2.0 // indirect
 	github.com/aymerick/raymond v2.0.3-0.20180322193309-b565731e1464+incompatible // indirect
+	github.com/bytedance/sonic v1.10.0 // indirect
 	github.com/cespare/xxhash/v2 v2.2.0 // indirect
+	github.com/chenzhuoyu/base64x v0.0.0-20230717121745-296ad89f973d // indirect
+	github.com/chenzhuoyu/iasm v0.9.0 // indirect
 	github.com/chris-ramon/douceur v0.2.0 // indirect
 	github.com/cloudflare/golz4 v0.0.0-20150217214814-ef862a3cdc58 // indirect
 	github.com/coocood/freecache v1.2.1 // indirect
@@ -61,6 +65,7 @@ require (
 	github.com/kataras/sitemap v0.0.5 // indirect
 	github.com/kataras/tunnel v0.0.2 // indirect
 	github.com/klauspost/compress v1.15.11 // indirect
+	github.com/klauspost/cpuid/v2 v2.0.9 // indirect
 	github.com/leodido/go-urn v1.2.0 // indirect
 	github.com/lib/pq v1.10.3 // indirect
 	github.com/magiconair/properties v1.8.1 // indirect
@@ -88,6 +93,7 @@ require (
 	github.com/takama/daemon v1.0.0 // indirect
 	github.com/tdewolff/minify/v2 v2.9.10 // indirect
 	github.com/tdewolff/parse/v2 v2.5.5 // indirect
+	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/vmihailenco/msgpack/v5 v5.3.5 // indirect
 	github.com/vmihailenco/tagparser/v2 v2.0.0 // indirect
@@ -108,7 +114,7 @@ require (
 	go.uber.org/atomic v1.7.0 // indirect
 	go.uber.org/automaxprocs v1.5.1 // indirect
 	go.uber.org/multierr v1.6.0 // indirect
-	go.uber.org/zap v1.21.0 // indirect
+	golang.org/x/arch v0.0.0-20210923205945-b76863e36670 // indirect
 	golang.org/x/crypto v0.0.0-20221010152910-d6f0a8c073c2 // indirect
 	golang.org/x/net v0.0.0-20221004154528-8021a29435af // indirect
 	golang.org/x/sync v0.0.0-20220923202941-7f9b1623fab7 // indirect
