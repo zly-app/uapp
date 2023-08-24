@@ -10,9 +10,9 @@ require (
 	github.com/zly-app/cache v0.0.3-0.20230814113731-dd2fc5b7ee3a
 	github.com/zly-app/component/es7 v0.0.0-20230803115002-926ba89df204
 	github.com/zly-app/component/mongo v0.0.0-20230805054932-86e87a071391
-	github.com/zly-app/component/redis v0.0.0-20230804100428-bf01af0b175f
+	github.com/zly-app/component/redis v0.0.0-20230824094845-61b5589c9423
 	github.com/zly-app/component/sqlx v0.0.0-20230803115002-926ba89df204
-	github.com/zly-app/component/xorm v0.0.0-20230803115002-926ba89df204
+	github.com/zly-app/component/xorm v0.0.0-20230824094845-61b5589c9423
 	github.com/zly-app/plugin/honey v0.2.7
 	github.com/zly-app/plugin/zipkinotel v0.0.4-0.20230426111850-46dfe8802ab9
 	github.com/zly-app/zapp v1.3.5
@@ -42,7 +42,7 @@ require (
 	github.com/fatih/structs v1.1.0 // indirect
 	github.com/flosch/pongo2/v4 v4.0.1 // indirect
 	github.com/fsnotify/fsnotify v1.4.9 // indirect
-	github.com/go-logr/logr v1.2.3 // indirect
+	github.com/go-logr/logr v1.2.4 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
 	github.com/go-playground/locales v0.13.0 // indirect
 	github.com/go-playground/universal-translator v0.17.0 // indirect
@@ -80,9 +80,9 @@ require (
 	github.com/openzipkin/zipkin-go v0.4.1 // indirect
 	github.com/pelletier/go-toml v1.2.0 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
-	github.com/redis/go-redis/extra/rediscmd/v9 v9.0.2 // indirect
-	github.com/redis/go-redis/extra/redisotel/v9 v9.0.2 // indirect
-	github.com/redis/go-redis/v9 v9.0.2 // indirect
+	github.com/redis/go-redis/extra/rediscmd/v9 v9.0.5 // indirect
+	github.com/redis/go-redis/extra/redisotel/v9 v9.0.5 // indirect
+	github.com/redis/go-redis/v9 v9.1.0 // indirect
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
 	github.com/schollz/closestmatch v2.1.0+incompatible // indirect
 	github.com/spf13/afero v1.1.2 // indirect
@@ -106,11 +106,11 @@ require (
 	github.com/zly-app/service/api v0.0.0-20220430055931-779fb32fc812 // indirect
 	github.com/zlyuancn/zretry v0.0.0-20220514032503-d78bfd22a441 // indirect
 	go.mongodb.org/mongo-driver v1.12.1 // indirect
-	go.opentelemetry.io/otel v1.13.0 // indirect
+	go.opentelemetry.io/otel v1.16.0 // indirect
 	go.opentelemetry.io/otel/bridge/opentracing v1.13.0 // indirect
-	go.opentelemetry.io/otel/metric v0.35.0 // indirect
-	go.opentelemetry.io/otel/sdk v1.13.0 // indirect
-	go.opentelemetry.io/otel/trace v1.13.0 // indirect
+	go.opentelemetry.io/otel/metric v1.16.0 // indirect
+	go.opentelemetry.io/otel/sdk v1.16.0 // indirect
+	go.opentelemetry.io/otel/trace v1.16.0 // indirect
 	go.uber.org/atomic v1.7.0 // indirect
 	go.uber.org/automaxprocs v1.5.1 // indirect
 	go.uber.org/multierr v1.6.0 // indirect
@@ -118,7 +118,7 @@ require (
 	golang.org/x/crypto v0.0.0-20221010152910-d6f0a8c073c2 // indirect
 	golang.org/x/net v0.0.0-20221004154528-8021a29435af // indirect
 	golang.org/x/sync v0.0.0-20220923202941-7f9b1623fab7 // indirect
-	golang.org/x/sys v0.0.0-20221010170243-090e33056c14 // indirect
+	golang.org/x/sys v0.8.0 // indirect
 	golang.org/x/text v0.7.0 // indirect
 	golang.org/x/time v0.0.0-20200630173020-3af7569d3a1e // indirect
 	google.golang.org/protobuf v1.28.1 // indirect
