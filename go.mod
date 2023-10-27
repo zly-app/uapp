@@ -3,19 +3,18 @@ module github.com/zly-app/uapp
 go 1.19
 
 require (
-	github.com/jmoiron/sqlx v1.2.0
 	github.com/olivere/elastic/v7 v7.0.22
 	github.com/spf13/cast v1.3.0
 	github.com/spf13/viper v1.7.1
 	github.com/zly-app/cache v0.0.3-0.20230814113731-dd2fc5b7ee3a
 	github.com/zly-app/component/es7 v0.0.0-20230803115002-926ba89df204
 	github.com/zly-app/component/mongo v0.0.0-20230805054932-86e87a071391
-	github.com/zly-app/component/redis v0.0.0-20230824094845-61b5589c9423
-	github.com/zly-app/component/sqlx v0.0.0-20230803115002-926ba89df204
+	github.com/zly-app/component/redis v0.0.0-20231026093728-9994f4b941d3
+	github.com/zly-app/component/sqlx v0.0.0-20231026093728-9994f4b941d3
 	github.com/zly-app/component/xorm v0.0.0-20230824094845-61b5589c9423
 	github.com/zly-app/plugin/honey v0.2.7
 	github.com/zly-app/plugin/zipkinotel v0.0.4-0.20230426111850-46dfe8802ab9
-	github.com/zly-app/zapp v1.3.5
+	github.com/zly-app/zapp v1.3.7
 	go.uber.org/zap v1.21.0
 )
 
@@ -56,6 +55,7 @@ require (
 	github.com/iris-contrib/jade v1.1.4 // indirect
 	github.com/iris-contrib/middleware/cors v0.0.0-20210110101738-6d0a4d799b5d // indirect
 	github.com/iris-contrib/schema v0.0.6 // indirect
+	github.com/jmoiron/sqlx v1.2.0 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/kataras/blocks v0.0.4 // indirect
@@ -116,12 +116,12 @@ require (
 	go.uber.org/multierr v1.6.0 // indirect
 	golang.org/x/arch v0.0.0-20210923205945-b76863e36670 // indirect
 	golang.org/x/crypto v0.0.0-20221010152910-d6f0a8c073c2 // indirect
-	golang.org/x/net v0.0.0-20221004154528-8021a29435af // indirect
-	golang.org/x/sync v0.0.0-20220923202941-7f9b1623fab7 // indirect
-	golang.org/x/sys v0.8.0 // indirect
-	golang.org/x/text v0.7.0 // indirect
+	golang.org/x/net v0.10.0 // indirect
+	golang.org/x/sync v0.3.0 // indirect
+	golang.org/x/sys v0.11.0 // indirect
+	golang.org/x/text v0.9.0 // indirect
 	golang.org/x/time v0.0.0-20200630173020-3af7569d3a1e // indirect
-	google.golang.org/protobuf v1.28.1 // indirect
+	google.golang.org/protobuf v1.31.0 // indirect
 	gopkg.in/ini.v1 v1.62.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect

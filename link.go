@@ -1,11 +1,11 @@
 package uapp
 
 import (
-	"github.com/jmoiron/sqlx"
 	elastic7 "github.com/olivere/elastic/v7"
 	"github.com/zly-app/cache"
 	"github.com/zly-app/component/mongo"
 	"github.com/zly-app/component/redis"
+	"github.com/zly-app/component/sqlx"
 	"github.com/zly-app/component/xorm"
 	"github.com/zly-app/zapp/config"
 	"github.com/zly-app/zapp/consts"
@@ -28,7 +28,7 @@ func GetDefRedis() redis.UniversalClient {
 }
 
 // 获取默认sqlx客户端
-func GetDefSqlx() *sqlx.DB {
+func GetDefSqlx() sqlx.Client {
 	return GetComponent().GetDefSqlx()
 }
 
