@@ -62,7 +62,7 @@ func makeUAppOpts(appName string) []zapp.Option {
 		IgnoreNamespaceNotFound: false,
 	}
 	if uAppApolloConfig.Address != "" {
-		uAppConf := config.NewConfig(uAppApolloConfig.AppId, config.WithApollo(uAppApolloConfig), config.WithoutFlag(uAppApolloConfig))
+		uAppConf := config.NewConfig(uAppApolloConfig.AppId, config.WithApollo(uAppApolloConfig), config.WithoutFlag())
 		uAppConfigs := uAppConf.GetViper().AllSettings()
 		// 这里要去掉 apollo 配置, 否则zapp启动时仍然会从apollo中获取一次
 		delete(uAppConfigs, consts.ApolloConfigKey)
@@ -73,7 +73,7 @@ func makeUAppOpts(appName string) []zapp.Option {
 		}
 	}
 
-	// 应用配置
+	// 应用配置, 这里仍然允许用户通过命令行覆盖配置
 	zAppApolloConfig, ok := getApolloConfigFromEnv(appName)
 	if ok {
 		vi.Set(consts.ApolloConfigKey, zAppApolloConfig) // 为应用配置写入apollo依据
@@ -84,8 +84,8 @@ func makeUAppOpts(appName string) []zapp.Option {
 		return opts
 	}
 
-	// 用户自行处理应用配置
-	appConf := config.NewConfig(uAppApolloConfig.AppId, config.WithoutFlag(uAppApolloConfig))
+	// 这里是为了把默认配置文件的数据加载进去并覆盖uapp, 这里仍然允许用户通过命令行覆盖配置
+	appConf := config.NewConfig(uAppApolloConfig.AppId, config.WithoutFlag())
 	err := vi.MergeConfigMap(appConf.GetViper().AllSettings())
 	if err != nil {
 		logger.Log.Fatal("合并用户自行处理的'应用配置'时错误", zap.Error(err))
