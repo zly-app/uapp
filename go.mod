@@ -29,7 +29,7 @@ require (
 	github.com/aymerick/douceur v0.2.0 // indirect
 	github.com/aymerick/raymond v2.0.3-0.20180322193309-b565731e1464+incompatible // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
-	github.com/bytedance/sonic v1.10.0 // indirect
+	github.com/bytedance/sonic v1.11.1 // indirect
 	github.com/cespare/xxhash/v2 v2.2.0 // indirect
 	github.com/chenzhuoyu/base64x v0.0.0-20230717121745-296ad89f973d // indirect
 	github.com/chenzhuoyu/iasm v0.9.0 // indirect
@@ -116,7 +116,7 @@ require (
 	github.com/yosssi/ace v0.0.5 // indirect
 	github.com/youmark/pkcs8 v0.0.0-20181117223130-1be2e3e5546d // indirect
 	github.com/yusufpapurcu/wmi v1.2.3 // indirect
-	github.com/zly-app/honey v0.2.9 // indirect
+	github.com/zly-app/honey v0.2.10 // indirect
 	github.com/zly-app/service/api v0.0.0-20220430055931-779fb32fc812 // indirect
 	github.com/zlyuancn/zretry v0.0.0-20220514032503-d78bfd22a441 // indirect
 	go.mongodb.org/mongo-driver v1.12.1 // indirect
