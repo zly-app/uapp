@@ -4,6 +4,7 @@ import (
 	elastic7 "github.com/olivere/elastic/v7"
 	"github.com/zly-app/cache"
 	"github.com/zly-app/component/mongo"
+	pulsar_producer "github.com/zly-app/component/pulsar-producer"
 	"github.com/zly-app/component/redis"
 	"github.com/zly-app/component/sqlx"
 	"github.com/zly-app/component/xorm"
@@ -35,6 +36,11 @@ func GetDefSqlx() sqlx.Client {
 // 获取默认xorm客户端
 func GetDefXorm() *xorm.Engine {
 	return GetComponent().GetDefXorm()
+}
+
+// 获取默认pulsar生产者
+func GetDefPulsarProducer() pulsar_producer.IPulsarProducer {
+	return GetComponent().GetPulsarProducer()
 }
 
 // 获取默认缓存

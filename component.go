@@ -4,6 +4,7 @@ import (
 	"github.com/zly-app/cache"
 	"github.com/zly-app/component/es7"
 	"github.com/zly-app/component/mongo"
+	pulsar_producer "github.com/zly-app/component/pulsar-producer"
 	"github.com/zly-app/component/redis"
 	"github.com/zly-app/component/sqlx"
 	"github.com/zly-app/component/xorm"
@@ -20,6 +21,7 @@ type IComponent interface {
 	sqlx.ISqlx
 	xorm.IXormCreator
 	cache.ICacheCreator
+	pulsar_producer.IPulsarProducerCreator
 }
 
 type Component struct {
@@ -30,6 +32,7 @@ type Component struct {
 	redis.IRedisCreator
 	sqlx.ISqlx
 	xorm.IXormCreator
+	pulsar_producer.IPulsarProducerCreator
 	cache.ICacheCreator
 }
 
@@ -41,6 +44,7 @@ func (c *Component) Close() {
 	c.IRedisCreator.Close()
 	c.ISqlx.Close()
 	c.IXormCreator.Close()
+	c.IPulsarProducerCreator.Close()
 	c.ICacheCreator.Close()
 }
 
@@ -48,12 +52,13 @@ func makeCustomComponent(app core.IApp) core.IComponent {
 	return &Component{
 		IComponent: app.GetComponent(),
 
-		IES7:          es7.NewES7(app),
-		IMongoCreator: mongo.NewMongoCreator(app),
-		IRedisCreator: redis.NewRedisCreator(app),
-		ISqlx:         sqlx.NewSqlx(app),
-		IXormCreator:  xorm.NewXormCreator(app),
-		ICacheCreator: cache.NewCacheCreator(app),
+		IES7:                   es7.NewES7(app),
+		IMongoCreator:          mongo.NewMongoCreator(app),
+		IRedisCreator:          redis.NewRedisCreator(app),
+		ISqlx:                  sqlx.NewSqlx(app),
+		IXormCreator:           xorm.NewXormCreator(app),
+		IPulsarProducerCreator: pulsar_producer.NewProducerCreator(app),
+		ICacheCreator:          cache.NewCacheCreator(app),
 	}
 }
 

@@ -34,6 +34,7 @@ c := uapp.GetComponent() // 获取组件
 + [x] [redis](https://github.com/zly-app/component/tree/master/redis)
 + [x] [sqlx](https://github.com/zly-app/component/tree/master/sqlx)
 + [x] [xorm](https://github.com/zly-app/component/tree/master/xorm)
++ [x] [pulsar](https://github.com/zly-app/component/tree/master/pulsar-producer)
 + [x] [cache 透明读缓存](https://github.com/zly-app/cache)
 
 ## 插件
