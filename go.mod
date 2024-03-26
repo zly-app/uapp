@@ -6,7 +6,7 @@ require (
 	github.com/olivere/elastic/v7 v7.0.22
 	github.com/spf13/cast v1.3.1
 	github.com/spf13/viper v1.8.1
-	github.com/zly-app/cache v0.0.3-0.20230814113731-dd2fc5b7ee3a
+	github.com/zly-app/cache/v2 v2.0.6
 	github.com/zly-app/component/es7 v0.0.0-20230803115002-926ba89df204
 	github.com/zly-app/component/mongo v0.0.0-20230805054932-86e87a071391
 	github.com/zly-app/component/pulsar-producer v0.0.0-20231026093728-9994f4b941d3

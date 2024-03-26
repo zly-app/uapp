@@ -924,8 +924,8 @@ github.com/yuin/goldmark v1.4.13/go.mod h1:6yULJ656Px+3vBD8DxQVa3kxgyrAnzto9xy5t
 github.com/yusufpapurcu/wmi v1.2.3 h1:E1ctvB7uKFMOJw3fdOW32DwGE9I7t++CRUEMKvFoFiw=
 github.com/yusufpapurcu/wmi v1.2.3/go.mod h1:SBZ9tNy3G9/m5Oi98Zks0QjeHVDvuK0qfxQmPyzfmi0=
 github.com/ziutek/mymysql v1.5.4/go.mod h1:LMSpPZ6DbqWFxNCHW77HeMg9I646SAhApZ/wKdgO/C0=
-github.com/zly-app/cache v0.0.3-0.20230814113731-dd2fc5b7ee3a h1:UT1Lu7DUaWjrJHSu+BiCbD3ueI5J05R0xFhTi8/rMBM=
-github.com/zly-app/cache v0.0.3-0.20230814113731-dd2fc5b7ee3a/go.mod h1:MwAa+XxowjHQQjSPIZFhBbo4vYRlD0tasKN9Nk1TnnA=
+github.com/zly-app/cache/v2 v2.0.6 h1:DBAwLj6ao1aj0iJMnGWCYBvTOzMHQ3N2yfkoJ0RP7Yc=
+github.com/zly-app/cache/v2 v2.0.6/go.mod h1:EMychNdJ6U1K6NMo6T+coFVNQ/ZU1Vp2JZ27Ka68Pq8=
 github.com/zly-app/component/es7 v0.0.0-20230803115002-926ba89df204 h1:YSFUV2osFMoWPFaTqUaRata8Gh3pDXecJWZT2HFmeyI=
 github.com/zly-app/component/es7 v0.0.0-20230803115002-926ba89df204/go.mod h1:87rZa4dxQnOcBiw9m+VgoN6Ttjo9nZ/1odDnzXqXRho=
 github.com/zly-app/component/mongo v0.0.0-20230805054932-86e87a071391 h1:bPf/dnlpcgquEnpjHaM7HdaRj+6fXF3IsrQunryIvwU=

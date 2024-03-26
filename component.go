@@ -1,7 +1,7 @@
 package uapp
 
 import (
-	"github.com/zly-app/cache"
+	"github.com/zly-app/cache/v2"
 	"github.com/zly-app/component/es7"
 	"github.com/zly-app/component/mongo"
 	pulsar_producer "github.com/zly-app/component/pulsar-producer"

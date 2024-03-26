@@ -2,7 +2,7 @@ package uapp
 
 import (
 	elastic7 "github.com/olivere/elastic/v7"
-	"github.com/zly-app/cache"
+	"github.com/zly-app/cache/v2"
 	"github.com/zly-app/component/mongo"
 	pulsar_producer "github.com/zly-app/component/pulsar-producer"
 	"github.com/zly-app/component/redis"
