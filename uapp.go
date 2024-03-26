@@ -16,6 +16,8 @@ import (
 	"github.com/zly-app/zapp/pkg/utils"
 	"github.com/zly-app/zapp/plugin/apollo_provider"
 	"go.uber.org/zap"
+
+	"github.com/zly-app/plugin/pprof"
 )
 
 func NewApp(appName string, opts ...zapp.Option) core.IApp {
@@ -27,6 +29,7 @@ func NewApp(appName string, opts ...zapp.Option) core.IApp {
 
 		zipkinotel.WithPlugin(), // trace
 		honey.WithPlugin(),      // log
+		pprof.WithPlugin(),      // pprof
 	}
 
 	uAppOpts := makeUAppOpts(appName)

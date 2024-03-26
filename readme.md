@@ -43,6 +43,7 @@ c := uapp.GetComponent() // 获取组件
   `apollo配置观察提供者`只有在`应用配置`存在`apollo`时才会开启.
 + [x] [zipkinotel 链路上报](https://github.com/zly-app/plugin/tree/master/zipkinotel)
 + [x] [honey 日志收集](https://github.com/zly-app/plugin/tree/master/honey)
++ [x] [pprof](https://github.com/zly-app/plugin/tree/master/pprof)
 
 # 配置说明
 
