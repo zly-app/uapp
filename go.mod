@@ -9,7 +9,7 @@ require (
 	github.com/zly-app/cache/v2 v2.0.6
 	github.com/zly-app/component/es7 v0.0.0-20230803115002-926ba89df204
 	github.com/zly-app/component/mongo v0.0.0-20230805054932-86e87a071391
-	github.com/zly-app/component/pulsar-producer v0.0.0-20240325113108-f1cfdafe6b8f
+	github.com/zly-app/component/pulsar-producer v0.0.0-20240403123708-1af67a735ba5
 	github.com/zly-app/component/redis v0.0.0-20231026093728-9994f4b941d3
 	github.com/zly-app/component/sqlx v0.0.0-20231026093728-9994f4b941d3
 	github.com/zly-app/component/xorm v0.0.0-20230824094845-61b5589c9423
