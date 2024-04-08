@@ -934,8 +934,8 @@ github.com/zly-app/component/es7 v0.0.0-20230803115002-926ba89df204 h1:YSFUV2osF
 github.com/zly-app/component/es7 v0.0.0-20230803115002-926ba89df204/go.mod h1:87rZa4dxQnOcBiw9m+VgoN6Ttjo9nZ/1odDnzXqXRho=
 github.com/zly-app/component/mongo v0.0.0-20230805054932-86e87a071391 h1:bPf/dnlpcgquEnpjHaM7HdaRj+6fXF3IsrQunryIvwU=
 github.com/zly-app/component/mongo v0.0.0-20230805054932-86e87a071391/go.mod h1:igen1985dC9IJ/BnzvwpkRJOuXz8YbtMx0Tw1Bs+QxM=
-github.com/zly-app/component/pulsar-producer v0.0.0-20240407093917-2645f4c31b22 h1:gq10K9o5xDzWs0QkhI4kgfw4Ie6LbEB5rTW4EmGL47k=
-github.com/zly-app/component/pulsar-producer v0.0.0-20240407093917-2645f4c31b22/go.mod h1:ZbduqqsUjeEqZzOLfY72HcwXnxC6u7972koErR3AD8s=
+github.com/zly-app/component/pulsar-producer v0.0.0-20240408015422-eb368bdcbe43 h1:sLePMNcLaWNMRzVHCRdq02Db2k7imojCiEKaeT9HJQw=
+github.com/zly-app/component/pulsar-producer v0.0.0-20240408015422-eb368bdcbe43/go.mod h1:ZbduqqsUjeEqZzOLfY72HcwXnxC6u7972koErR3AD8s=
 github.com/zly-app/component/redis v0.0.0-20231026093728-9994f4b941d3 h1:fKpmkeEN9rTtV3e9QF2AKYfusyY3TnnlNCpTut5wPwI=
 github.com/zly-app/component/redis v0.0.0-20231026093728-9994f4b941d3/go.mod h1:pFOGw975Qkzihjyobr8UlHna+94H0JJv2Uo8pgBNN4A=
 github.com/zly-app/component/sqlx v0.0.0-20231026093728-9994f4b941d3 h1:KxBLXGtvE3EmfGFTFDZLi6Cetb5afcnc65q8GZP707c=
