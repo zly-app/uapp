@@ -16,7 +16,7 @@ require (
 	github.com/zly-app/plugin/honey v0.2.7
 	github.com/zly-app/plugin/pprof v0.0.0-20240404071939-b8be0d638d18
 	github.com/zly-app/plugin/zipkinotel v0.0.4-0.20230426111850-46dfe8802ab9
-	github.com/zly-app/zapp v1.3.11-0.20240402052452-375df4969e27
+	github.com/zly-app/zapp v1.3.11
 	go.uber.org/zap v1.21.0
 )
 
