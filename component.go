@@ -48,9 +48,9 @@ func (c *Component) Close() {
 	c.ICacheCreator.Close()
 }
 
-func makeCustomComponent(app core.IApp) core.IComponent {
+func makeCustomComponent(app core.IApp, c core.IComponent) core.IComponent {
 	return &Component{
-		IComponent: app.GetComponent(),
+		IComponent: c,
 
 		IES7:                   es7.NewES7(app),
 		IMongoCreator:          mongo.NewMongoCreator(app),

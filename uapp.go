@@ -22,7 +22,7 @@ import (
 
 func NewApp(appName string, opts ...zapp.Option) core.IApp {
 	allOpts := []zapp.Option{
-		zapp.WithCustomComponent(makeCustomComponent), // 自定义组件
+		zapp.CustomComponentFns(makeCustomComponent), // 自定义组件
 		zapp.WithEnableDaemon(),                       // 启用守护进程
 		zapp.WithIgnoreInjectOfDisablePlugin(true),    // 忽略未启用的插件注入
 		zapp.WithIgnoreInjectOfDisableService(true),   // 忽略未启用的服务注入
