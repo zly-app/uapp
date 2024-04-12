@@ -932,8 +932,10 @@ github.com/yusufpapurcu/wmi v1.2.3/go.mod h1:SBZ9tNy3G9/m5Oi98Zks0QjeHVDvuK0qfxQ
 github.com/ziutek/mymysql v1.5.4/go.mod h1:LMSpPZ6DbqWFxNCHW77HeMg9I646SAhApZ/wKdgO/C0=
 github.com/zly-app/cache/v2 v2.0.6 h1:DBAwLj6ao1aj0iJMnGWCYBvTOzMHQ3N2yfkoJ0RP7Yc=
 github.com/zly-app/cache/v2 v2.0.6/go.mod h1:EMychNdJ6U1K6NMo6T+coFVNQ/ZU1Vp2JZ27Ka68Pq8=
-github.com/zly-app/component/es7 v0.0.0-20230803115002-926ba89df204 h1:YSFUV2osFMoWPFaTqUaRata8Gh3pDXecJWZT2HFmeyI=
-github.com/zly-app/component/es7 v0.0.0-20230803115002-926ba89df204/go.mod h1:87rZa4dxQnOcBiw9m+VgoN6Ttjo9nZ/1odDnzXqXRho=
+github.com/zly-app/component/es7 v0.0.0-20240412035514-1a53087119be h1:eco48LbqjPvDc0uPShZarwM9k63U3qU4Ol0AWUZLOxY=
+github.com/zly-app/component/es7 v0.0.0-20240412035514-1a53087119be/go.mod h1:ADqSstH7fDIBWoXZcjy55yHXregg+BOjNQWuHP2tbUM=
+github.com/zly-app/component/http v0.0.0-20240412035403-f80ccc59990c h1:q5sHgkyguBlcNJvcqvMnQdXBT4WjndKCny7mjzG34Zo=
+github.com/zly-app/component/http v0.0.0-20240412035403-f80ccc59990c/go.mod h1:ag9RyDAlBRelWK1O05pqKydQk/awlgTZG9WyTVrP1sY=
 github.com/zly-app/component/mongo v0.0.0-20230805054932-86e87a071391 h1:bPf/dnlpcgquEnpjHaM7HdaRj+6fXF3IsrQunryIvwU=
 github.com/zly-app/component/mongo v0.0.0-20230805054932-86e87a071391/go.mod h1:igen1985dC9IJ/BnzvwpkRJOuXz8YbtMx0Tw1Bs+QxM=
 github.com/zly-app/component/pulsar-producer v0.0.0-20240408015422-eb368bdcbe43 h1:sLePMNcLaWNMRzVHCRdq02Db2k7imojCiEKaeT9HJQw=
@@ -955,7 +957,6 @@ github.com/zly-app/plugin/zipkinotel v0.0.4-0.20230426111850-46dfe8802ab9 h1:dMD
 github.com/zly-app/plugin/zipkinotel v0.0.4-0.20230426111850-46dfe8802ab9/go.mod h1:0tvhuJ8Q/knj6aAu8N4pYkMZmQ8U4XYk5bgYjl0jP0Q=
 github.com/zly-app/service/api v0.0.0-20220430055931-779fb32fc812 h1:3ULBQicxfHKLGVElBX4pLSRITFP12pt66N3CtQRcXw0=
 github.com/zly-app/service/api v0.0.0-20220430055931-779fb32fc812/go.mod h1:XL0rAOnzZR5WDQqLiiUeKdLUXmEM5VjJBEPXdcIx8yg=
-github.com/zly-app/zapp v1.0.12/go.mod h1:Z5V+S/+OakHkuPKzwbU5zf5Om2Ryh2TCG2eKb1U2VTk=
 github.com/zly-app/zapp v1.1.9/go.mod h1:MszpwW6QqAhZZRAKo9UtzT4eaYXkyCMpGuRKBsHFYbw=
 github.com/zly-app/zapp v1.1.11/go.mod h1:itTp7wuwF18fUw0/WvLO13Gid/NpiZmnkUBxtHegW5Q=
 github.com/zly-app/zapp v1.1.16/go.mod h1:0xOFkGfjg5ammcCOdPxqmdXc1lErw+6ABb/yozW9Djk=
