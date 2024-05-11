@@ -6,6 +6,7 @@ import (
 
 	"github.com/spf13/cast"
 	"github.com/spf13/viper"
+	"github.com/zly-app/component/http"
 	"github.com/zly-app/plugin/honey"
 	"github.com/zly-app/plugin/zipkinotel"
 	"github.com/zly-app/zapp"
@@ -23,9 +24,9 @@ import (
 func NewApp(appName string, opts ...zapp.Option) core.IApp {
 	allOpts := []zapp.Option{
 		zapp.CustomComponentFns(makeCustomComponent), // 自定义组件
-		zapp.WithEnableDaemon(),                       // 启用守护进程
-		zapp.WithIgnoreInjectOfDisablePlugin(true),    // 忽略未启用的插件注入
-		zapp.WithIgnoreInjectOfDisableService(true),   // 忽略未启用的服务注入
+		zapp.WithEnableDaemon(),                      // 启用守护进程
+		zapp.WithIgnoreInjectOfDisablePlugin(true),   // 忽略未启用的插件注入
+		zapp.WithIgnoreInjectOfDisableService(true),  // 忽略未启用的服务注入
 
 		zipkinotel.WithPlugin(), // trace
 		honey.WithPlugin(),      // log
@@ -37,6 +38,9 @@ func NewApp(appName string, opts ...zapp.Option) core.IApp {
 
 	allOpts = append(allOpts, opts...)
 	app := zapp.NewApp(appName, allOpts...)
+
+	http.ReplaceStd()
+
 	return app
 }
 

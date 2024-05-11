@@ -35,14 +35,15 @@ c := uapp.GetComponent() // 获取组件
 + [x] [sqlx](https://github.com/zly-app/component/tree/master/sqlx)
 + [x] [xorm](https://github.com/zly-app/component/tree/master/xorm)
 + [x] [pulsar](https://github.com/zly-app/component/tree/master/pulsar-producer)
-+ [x] [cache 透明读缓存](https://github.com/zly-app/cache)
++ [x] [cache](https://github.com/zly-app/cache) 透明读缓存
++ [x] [http.ReplaceStd](https://github.com/zly-app/component/tree/master/http) 替换 http 包的的 DefaultClient 和 DefaultTransport 以默认支持相关监测
 
 ## 插件
 
-+ [x] [apollo_provider apollo配置观察提供者](https://github.com/zly-app/zapp/tree/master/plugin/apollo_provider)
++ [x] [apollo_provider](https://github.com/zly-app/zapp/tree/master/plugin/apollo_provider) 
   `apollo配置观察提供者`只有在`应用配置`存在`apollo`时才会开启.
-+ [x] [zipkinotel 链路上报](https://github.com/zly-app/plugin/tree/master/zipkinotel)
-+ [x] [honey 日志收集](https://github.com/zly-app/plugin/tree/master/honey)
++ [x] [zipkinotel](https://github.com/zly-app/plugin/tree/master/zipkinotel) 链路上报
++ [x] [honey](https://github.com/zly-app/plugin/tree/master/honey) 日志收集
 + [x] [pprof](https://github.com/zly-app/plugin/tree/master/pprof)
 
 # 配置说明
