@@ -8,6 +8,7 @@ require (
 	github.com/spf13/viper v1.8.1
 	github.com/zly-app/cache/v2 v2.0.6
 	github.com/zly-app/component/es7 v0.0.0-20240511071219-07a935950ff5
+	github.com/zly-app/component/http v0.0.0-20240511071012-26a67696139a
 	github.com/zly-app/component/mongo v0.0.0-20230805054932-86e87a071391
 	github.com/zly-app/component/pulsar-producer v0.0.0-20240408015422-eb368bdcbe43
 	github.com/zly-app/component/redis v0.0.0-20231026093728-9994f4b941d3
@@ -138,7 +139,6 @@ require (
 	github.com/yosssi/ace v0.0.5 // indirect
 	github.com/youmark/pkcs8 v0.0.0-20181117223130-1be2e3e5546d // indirect
 	github.com/yusufpapurcu/wmi v1.2.3 // indirect
-	github.com/zly-app/component/http v0.0.0-20240511071012-26a67696139a // indirect
 	github.com/zly-app/honey v0.2.10 // indirect
 	github.com/zly-app/service/api v0.0.0-20220430055931-779fb32fc812 // indirect
 	github.com/zlyuancn/zretry v0.0.0-20220514032503-d78bfd22a441 // indirect
