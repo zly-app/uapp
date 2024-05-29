@@ -48,28 +48,30 @@ func NewApp(appName string, opts ...zapp.Option) core.IApp {
 func makeUAppOpts(appName string) []zapp.Option {
 	vi := viper.New()
 
-	backupFile := os.Getenv("ApolloBackupFile")
-	if backupFile != "" {
-		backupFile += ".uapp"
-	}
+	allowApollo := os.Getenv("ApolloAddress") != ""
 
-	// uapp配置
-	uAppApolloConfig := &config.ApolloConfig{
-		Address:                 os.Getenv("ApolloAddress"),
-		AppId:                   utils.Ternary.Or(os.Getenv("ApolloUAppID"), "uapp").(string),
-		AccessKey:               os.Getenv("ApolloAccessKey"),
-		AuthBasicUser:           os.Getenv("ApolloAuthBasicUser"),
-		AuthBasicPassword:       os.Getenv("ApolloAuthBasicPassword"),
-		Cluster:                 utils.Ternary.Or(os.Getenv("ApolloCluster"), "default").(string),
-		AlwaysLoadFromRemote:    cast.ToBool(os.Getenv("ApolloAlwaysLoadFromRemote")),
-		BackupFile:              backupFile,
-		ApplicationDataType:     os.Getenv("ApolloApplicationDataType"),
-		ApplicationParseKeys:    nil,
-		Namespaces:              nil,
-		IgnoreNamespaceNotFound: false,
-	}
-	if uAppApolloConfig.Address != "" {
-		uAppConf := config.NewConfig(uAppApolloConfig.AppId, config.WithApollo(uAppApolloConfig), config.WithoutFlag())
+	// uapp 配置
+	if allowApollo && strings.ToLower(os.Getenv("ApolloDisableApolloUApp")) != "true" {
+		// uapp配置
+		uAppApolloConfig := &config.ApolloConfig{
+			Address:                 os.Getenv("ApolloAddress"),
+			AppId:                   utils.Ternary.Or(os.Getenv("ApolloUAppID"), "uapp").(string),
+			AccessKey:               os.Getenv("ApolloAccessKey"),
+			AuthBasicUser:           os.Getenv("ApolloAuthBasicUser"),
+			AuthBasicPassword:       os.Getenv("ApolloAuthBasicPassword"),
+			Cluster:                 utils.Ternary.Or(os.Getenv("ApolloCluster"), "default").(string),
+			AlwaysLoadFromRemote:    cast.ToBool(os.Getenv("ApolloAlwaysLoadFromRemote")),
+			BackupFile:              os.Getenv("ApolloBackupFile"),
+			ApplicationDataType:     os.Getenv("ApolloApplicationDataType"),
+			ApplicationParseKeys:    nil,
+			Namespaces:              nil,
+			IgnoreNamespaceNotFound: false,
+		}
+		if uAppApolloConfig.BackupFile != "" {
+			uAppApolloConfig.BackupFile += ".uapp"
+		}
+
+		uAppConf := config.NewConfig(appName, config.WithApollo(uAppApolloConfig), config.WithoutFlag())
 		uAppConfigs := uAppConf.GetViper().AllSettings()
 		// 这里要去掉 apollo 配置, 否则zapp启动时仍然会从apollo中获取一次
 		delete(uAppConfigs, consts.ApolloConfigKey)
@@ -81,9 +83,30 @@ func makeUAppOpts(appName string) []zapp.Option {
 	}
 
 	// 应用配置, 这里仍然允许用户通过命令行覆盖配置
-	zAppApolloConfig, ok := getApolloConfigFromEnv(appName)
-	if ok {
-		vi.Set(consts.ApolloConfigKey, zAppApolloConfig) // 为应用配置写入apollo依据
+	if allowApollo && strings.ToLower(os.Getenv("ApolloDisableApolloApp")) != "true" {
+		appApolloConfig := &config.ApolloConfig{
+			Address:                 os.Getenv("ApolloAddress"),
+			AppId:                   utils.Ternary.Or(os.Getenv("ApolloAppId"), appName).(string),
+			AccessKey:               os.Getenv("ApolloAccessKey"),
+			AuthBasicUser:           os.Getenv("ApolloAuthBasicUser"),
+			AuthBasicPassword:       os.Getenv("ApolloAuthBasicPassword"),
+			Cluster:                 utils.Ternary.Or(os.Getenv("ApolloCluster"), "default").(string),
+			AlwaysLoadFromRemote:    cast.ToBool(os.Getenv("ApolloAlwaysLoadFromRemote")),
+			BackupFile:              os.Getenv("ApolloBackupFile"),
+			ApplicationDataType:     os.Getenv("ApolloApplicationDataType"),
+			IgnoreNamespaceNotFound: cast.ToBool(os.Getenv("ApolloIgnoreNamespaceNotFound")),
+		}
+		applicationParseKeys := os.Getenv("ApolloApplicationParseKeys")
+		if applicationParseKeys != "" {
+			appApolloConfig.ApplicationParseKeys = strings.Split(applicationParseKeys, ",")
+		}
+		namespaces := os.Getenv("ApolloNamespaces")
+		if namespaces != "" {
+			appApolloConfig.Namespaces = strings.Split(namespaces, ",")
+		}
+
+		// 这里不立即获取配置数据, 而是包装为opts交给使用者, 因为用户可能通过命令行-conf覆盖配置
+		vi.Set(consts.ApolloConfigKey, appApolloConfig) // 为应用配置写入apollo依据
 		opts := []zapp.Option{
 			zapp.WithConfigOption(config.WithViper(vi)), // 告诉zapp从这个vi中加载配置
 			apollo_provider.WithPlugin(true),            // 配置观察提供者--apollo
@@ -91,11 +114,11 @@ func makeUAppOpts(appName string) []zapp.Option {
 		return opts
 	}
 
-	// 这里是为了把默认配置文件的数据加载进去并覆盖uapp, 这里仍然允许用户通过命令行覆盖配置
-	appConf := config.NewConfig(uAppApolloConfig.AppId, config.WithoutFlag())
+	// 当没有启用应用配置时, 读取默认配置文件的数据并覆盖uapp, 允许用户通过命令行-conf覆盖所有配置
+	appConf := config.NewConfig(appName, config.WithoutFlag())
 	err := vi.MergeConfigMap(appConf.GetViper().AllSettings())
 	if err != nil {
-		logger.Log.Fatal("合并用户自行处理的'应用配置'时错误", zap.Error(err))
+		logger.Log.Fatal("合并用户默认配置文件数据时错误", zap.Error(err))
 	}
 
 	opts := []zapp.Option{
@@ -108,37 +131,4 @@ func makeUAppOpts(appName string) []zapp.Option {
 		)
 	}
 	return opts
-}
-
-// 从环境变量中获取apollo配置
-func getApolloConfigFromEnv(appName string) (*config.ApolloConfig, bool) {
-	disable := os.Getenv("ApolloDisableApolloApp")
-	if strings.ToLower(disable) == "true" {
-		return nil, false
-	}
-
-	apolloConfig := &config.ApolloConfig{
-		Address:                 os.Getenv("ApolloAddress"),
-		AppId:                   utils.Ternary.Or(os.Getenv("ApolloAppId"), appName).(string),
-		AccessKey:               os.Getenv("ApolloAccessKey"),
-		AuthBasicUser:           os.Getenv("ApolloAuthBasicUser"),
-		AuthBasicPassword:       os.Getenv("ApolloAuthBasicPassword"),
-		Cluster:                 utils.Ternary.Or(os.Getenv("ApolloCluster"), "default").(string),
-		AlwaysLoadFromRemote:    cast.ToBool(os.Getenv("ApolloAlwaysLoadFromRemote")),
-		BackupFile:              os.Getenv("ApolloBackupFile"),
-		ApplicationDataType:     os.Getenv("ApolloApplicationDataType"),
-		IgnoreNamespaceNotFound: cast.ToBool(os.Getenv("ApolloIgnoreNamespaceNotFound")),
-	}
-	if apolloConfig.Address == "" {
-		return nil, false
-	}
-	applicationParseKeys := os.Getenv("ApolloApplicationParseKeys")
-	if applicationParseKeys != "" {
-		apolloConfig.ApplicationParseKeys = strings.Split(applicationParseKeys, ",")
-	}
-	namespaces := os.Getenv("ApolloNamespaces")
-	if namespaces != "" {
-		apolloConfig.Namespaces = strings.Split(namespaces, ",")
-	}
-	return apolloConfig, true
 }

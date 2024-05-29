@@ -73,6 +73,7 @@ c := uapp.GetComponent() // 获取组件
 | ApolloAddress                 | 否       | apollo-api地址, 多个地址用英文逗号连接, 如果不存在则不会使用apollo                                     |           |
 | ApolloUAppID                  | 否       | uapp 应用名                                                                                            | uapp      |
 | ApolloAppId                   | 否       | 当前应用名, 应用要覆盖 uapp 的配置                                                                     | \<app名\> |
+| ApolloDisableApolloUApp       | 否       | uapp不从apollo中获取uapp配置, 不会影响`应用配置`的获取                                                 | false     |
 | ApolloDisableApolloApp        | 否       | uapp不从apollo中获取`应用配置`                                                                         | false     |
 | ApolloAccessKey               | 否       | 验证key, 优先级高于基础认证                                                                            |           |
 | ApolloAuthBasicUser           | 否       | 基础认证用户名, 可用于nginx的基础认证扩展                                                              |           |
