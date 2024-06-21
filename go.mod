@@ -8,7 +8,7 @@ require (
 	github.com/spf13/viper v1.8.1
 	github.com/zly-app/cache/v2 v2.0.6
 	github.com/zly-app/component/es7 v0.0.0-20240511071219-07a935950ff5
-	github.com/zly-app/component/http v0.0.0-20240621082200-6ee2e20a6b0e
+	github.com/zly-app/component/http v0.0.0-20240621094636-7da56cc660c1
 	github.com/zly-app/component/mongo v0.0.0-20230805054932-86e87a071391
 	github.com/zly-app/component/pulsar-producer v0.0.0-20240408015422-eb368bdcbe43
 	github.com/zly-app/component/redis v0.0.0-20240615051216-bb4902fcafcc

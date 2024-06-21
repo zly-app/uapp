@@ -935,8 +935,8 @@ github.com/zly-app/cache/v2 v2.0.6/go.mod h1:EMychNdJ6U1K6NMo6T+coFVNQ/ZU1Vp2JZ2
 github.com/zly-app/component/es7 v0.0.0-20240511071219-07a935950ff5 h1:8VQOTYX598h2V2CaNtmVB5Jcylbq0N8eec+SvdvijQY=
 github.com/zly-app/component/es7 v0.0.0-20240511071219-07a935950ff5/go.mod h1:SxZ4CJSvdBEGzNuNJTu/nDp7DakEJp/sDujUsaBbmWw=
 github.com/zly-app/component/http v0.0.0-20240511071012-26a67696139a/go.mod h1:ag9RyDAlBRelWK1O05pqKydQk/awlgTZG9WyTVrP1sY=
-github.com/zly-app/component/http v0.0.0-20240621082200-6ee2e20a6b0e h1:E9UeZzdJUFRt/kB9QabS4em8UGoQTRe4Rj4S/fFXOvI=
-github.com/zly-app/component/http v0.0.0-20240621082200-6ee2e20a6b0e/go.mod h1:rIEFYyTTl7aATBbpFQDFcUEfzqpI1pO58GE/z0gxFpc=
+github.com/zly-app/component/http v0.0.0-20240621094636-7da56cc660c1 h1:j9T0DzbxZf9qCEDEpX6kZdr0hgD/lIyQINszZxOQcIw=
+github.com/zly-app/component/http v0.0.0-20240621094636-7da56cc660c1/go.mod h1:rIEFYyTTl7aATBbpFQDFcUEfzqpI1pO58GE/z0gxFpc=
 github.com/zly-app/component/mongo v0.0.0-20230805054932-86e87a071391 h1:bPf/dnlpcgquEnpjHaM7HdaRj+6fXF3IsrQunryIvwU=
 github.com/zly-app/component/mongo v0.0.0-20230805054932-86e87a071391/go.mod h1:igen1985dC9IJ/BnzvwpkRJOuXz8YbtMx0Tw1Bs+QxM=
 github.com/zly-app/component/pulsar-producer v0.0.0-20240408015422-eb368bdcbe43 h1:sLePMNcLaWNMRzVHCRdq02Db2k7imojCiEKaeT9HJQw=
