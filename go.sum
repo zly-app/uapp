@@ -934,8 +934,9 @@ github.com/zly-app/cache/v2 v2.0.6 h1:DBAwLj6ao1aj0iJMnGWCYBvTOzMHQ3N2yfkoJ0RP7Y
 github.com/zly-app/cache/v2 v2.0.6/go.mod h1:EMychNdJ6U1K6NMo6T+coFVNQ/ZU1Vp2JZ27Ka68Pq8=
 github.com/zly-app/component/es7 v0.0.0-20240511071219-07a935950ff5 h1:8VQOTYX598h2V2CaNtmVB5Jcylbq0N8eec+SvdvijQY=
 github.com/zly-app/component/es7 v0.0.0-20240511071219-07a935950ff5/go.mod h1:SxZ4CJSvdBEGzNuNJTu/nDp7DakEJp/sDujUsaBbmWw=
-github.com/zly-app/component/http v0.0.0-20240511071012-26a67696139a h1:wLh7YIhwG7Q1r1PggZ9DiITU7fjYMoCkcp/LJKhBL28=
 github.com/zly-app/component/http v0.0.0-20240511071012-26a67696139a/go.mod h1:ag9RyDAlBRelWK1O05pqKydQk/awlgTZG9WyTVrP1sY=
+github.com/zly-app/component/http v0.0.0-20240621082200-6ee2e20a6b0e h1:E9UeZzdJUFRt/kB9QabS4em8UGoQTRe4Rj4S/fFXOvI=
+github.com/zly-app/component/http v0.0.0-20240621082200-6ee2e20a6b0e/go.mod h1:rIEFYyTTl7aATBbpFQDFcUEfzqpI1pO58GE/z0gxFpc=
 github.com/zly-app/component/mongo v0.0.0-20230805054932-86e87a071391 h1:bPf/dnlpcgquEnpjHaM7HdaRj+6fXF3IsrQunryIvwU=
 github.com/zly-app/component/mongo v0.0.0-20230805054932-86e87a071391/go.mod h1:igen1985dC9IJ/BnzvwpkRJOuXz8YbtMx0Tw1Bs+QxM=
 github.com/zly-app/component/pulsar-producer v0.0.0-20240408015422-eb368bdcbe43 h1:sLePMNcLaWNMRzVHCRdq02Db2k7imojCiEKaeT9HJQw=
@@ -964,8 +965,8 @@ github.com/zly-app/zapp v1.3.5/go.mod h1:6Y2m3yM1jd5Htli6s+TRhxIw8AkqCo8vTZCGOjo
 github.com/zly-app/zapp v1.3.7-0.20231023123435-a4a2bb693891/go.mod h1:xxAyACsD1k2et8PsHV4j40HqVUQQ55sbHEt1J9jIVjU=
 github.com/zly-app/zapp v1.3.7/go.mod h1:xxAyACsD1k2et8PsHV4j40HqVUQQ55sbHEt1J9jIVjU=
 github.com/zly-app/zapp v1.3.10/go.mod h1:HmrE9OKTwr36gcv+Zy0fSTJzx+WsUF3JEcWSW3YJTwg=
-github.com/zly-app/zapp v1.3.14 h1:oVV9Tv1EMGNYLv4lP8WRa2paNLVypvKBBixQ3pCbtF4=
-github.com/zly-app/zapp v1.3.14/go.mod h1:HmrE9OKTwr36gcv+Zy0fSTJzx+WsUF3JEcWSW3YJTwg=
+github.com/zly-app/zapp v1.3.15 h1:Pqpn75pqTDozrSvmi+rs9TW/QSdIrZslof2Alt57vTc=
+github.com/zly-app/zapp v1.3.15/go.mod h1:HmrE9OKTwr36gcv+Zy0fSTJzx+WsUF3JEcWSW3YJTwg=
 github.com/zlyuancn/zretry v0.0.0-20220514032503-d78bfd22a441 h1:Sw0KI54iN5+zLL74vWx9R1o9S1yWc+f3oRKOjKrMCqA=
 github.com/zlyuancn/zretry v0.0.0-20220514032503-d78bfd22a441/go.mod h1:nXpt3JELMAirMyc5KExlSX96ixpohjHkxHpJlhqRnUU=
 go.etcd.io/bbolt v1.3.2/go.mod h1:IbVyRI1SCnLcuJnV2u8VeU0CEYM7e686BmAb1XKL+uU=
