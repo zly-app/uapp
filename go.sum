@@ -930,8 +930,8 @@ github.com/yuin/goldmark v1.4.13/go.mod h1:6yULJ656Px+3vBD8DxQVa3kxgyrAnzto9xy5t
 github.com/yusufpapurcu/wmi v1.2.3 h1:E1ctvB7uKFMOJw3fdOW32DwGE9I7t++CRUEMKvFoFiw=
 github.com/yusufpapurcu/wmi v1.2.3/go.mod h1:SBZ9tNy3G9/m5Oi98Zks0QjeHVDvuK0qfxQmPyzfmi0=
 github.com/ziutek/mymysql v1.5.4/go.mod h1:LMSpPZ6DbqWFxNCHW77HeMg9I646SAhApZ/wKdgO/C0=
-github.com/zly-app/cache/v2 v2.0.6 h1:DBAwLj6ao1aj0iJMnGWCYBvTOzMHQ3N2yfkoJ0RP7Yc=
-github.com/zly-app/cache/v2 v2.0.6/go.mod h1:EMychNdJ6U1K6NMo6T+coFVNQ/ZU1Vp2JZ27Ka68Pq8=
+github.com/zly-app/cache/v2 v2.0.7 h1:IzsQD8IhDv7391I9pXVm5uUAMNqDoPM9aFnSjNwTqnc=
+github.com/zly-app/cache/v2 v2.0.7/go.mod h1:fiJxD5xJ7fkhLseBsugnJpAOqWrX/k9tHin/Hcsgk/I=
 github.com/zly-app/component/es7 v0.0.0-20240511071219-07a935950ff5 h1:8VQOTYX598h2V2CaNtmVB5Jcylbq0N8eec+SvdvijQY=
 github.com/zly-app/component/es7 v0.0.0-20240511071219-07a935950ff5/go.mod h1:SxZ4CJSvdBEGzNuNJTu/nDp7DakEJp/sDujUsaBbmWw=
 github.com/zly-app/component/http v0.0.0-20240511071012-26a67696139a/go.mod h1:ag9RyDAlBRelWK1O05pqKydQk/awlgTZG9WyTVrP1sY=
@@ -941,8 +941,8 @@ github.com/zly-app/component/mongo v0.0.0-20230805054932-86e87a071391 h1:bPf/dnl
 github.com/zly-app/component/mongo v0.0.0-20230805054932-86e87a071391/go.mod h1:igen1985dC9IJ/BnzvwpkRJOuXz8YbtMx0Tw1Bs+QxM=
 github.com/zly-app/component/pulsar-producer v0.0.0-20240408015422-eb368bdcbe43 h1:sLePMNcLaWNMRzVHCRdq02Db2k7imojCiEKaeT9HJQw=
 github.com/zly-app/component/pulsar-producer v0.0.0-20240408015422-eb368bdcbe43/go.mod h1:ZbduqqsUjeEqZzOLfY72HcwXnxC6u7972koErR3AD8s=
-github.com/zly-app/component/redis v0.0.0-20240615051216-bb4902fcafcc h1:hj3xfdivKm5JfT4bODRjsmdVZjXmyTfnX+YYHYS/7zg=
-github.com/zly-app/component/redis v0.0.0-20240615051216-bb4902fcafcc/go.mod h1:pFOGw975Qkzihjyobr8UlHna+94H0JJv2Uo8pgBNN4A=
+github.com/zly-app/component/redis v0.0.0-20240621094636-7da56cc660c1 h1:1ZFy4wZzbYROOM1guYe5gg1rCO8xD+aV/GIzKemFbqk=
+github.com/zly-app/component/redis v0.0.0-20240621094636-7da56cc660c1/go.mod h1:pFOGw975Qkzihjyobr8UlHna+94H0JJv2Uo8pgBNN4A=
 github.com/zly-app/component/sqlx v0.0.0-20240408091045-7b3960c82f8e h1:+ZEtLuSTeiB6lSwJTVPmVn68qoy1dS3Sv6DWCF9cLDA=
 github.com/zly-app/component/sqlx v0.0.0-20240408091045-7b3960c82f8e/go.mod h1:uVxXxrOwe33O9wNIVQQWT91OwGiBN6NHdDcZbA97UVw=
 github.com/zly-app/component/xorm v0.0.0-20230824094845-61b5589c9423 h1:vn2YZhAYDzrKIe3Wt3a6z4cAtShB59j6PZatBz9vL9M=

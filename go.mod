@@ -6,12 +6,12 @@ require (
 	github.com/olivere/elastic/v7 v7.0.22
 	github.com/spf13/cast v1.3.1
 	github.com/spf13/viper v1.8.1
-	github.com/zly-app/cache/v2 v2.0.6
+	github.com/zly-app/cache/v2 v2.0.7
 	github.com/zly-app/component/es7 v0.0.0-20240511071219-07a935950ff5
 	github.com/zly-app/component/http v0.0.0-20240621094636-7da56cc660c1
 	github.com/zly-app/component/mongo v0.0.0-20230805054932-86e87a071391
 	github.com/zly-app/component/pulsar-producer v0.0.0-20240408015422-eb368bdcbe43
-	github.com/zly-app/component/redis v0.0.0-20240615051216-bb4902fcafcc
+	github.com/zly-app/component/redis v0.0.0-20240621094636-7da56cc660c1
 	github.com/zly-app/component/sqlx v0.0.0-20240408091045-7b3960c82f8e
 	github.com/zly-app/component/xorm v0.0.0-20230824094845-61b5589c9423
 	github.com/zly-app/plugin/honey v0.2.7
