@@ -11,7 +11,7 @@ require (
 	github.com/zly-app/component/http v0.0.0-20240621094636-7da56cc660c1
 	github.com/zly-app/component/mongo v0.0.0-20230805054932-86e87a071391
 	github.com/zly-app/component/pulsar-producer v0.0.0-20240408015422-eb368bdcbe43
-	github.com/zly-app/component/redis v0.0.0-20240621094636-7da56cc660c1
+	github.com/zly-app/component/redis v0.0.0-20240711030119-a996778d22ce
 	github.com/zly-app/component/sqlx v0.0.0-20240408091045-7b3960c82f8e
 	github.com/zly-app/component/xorm v0.0.0-20230824094845-61b5589c9423
 	github.com/zly-app/plugin/honey v0.2.7
