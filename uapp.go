@@ -18,6 +18,8 @@ import (
 	"github.com/zly-app/zapp/plugin/apollo_provider"
 	"go.uber.org/zap"
 
+	"github.com/zly-app/plugin/prometheus"
+
 	"github.com/zly-app/plugin/pprof"
 )
 
@@ -31,6 +33,7 @@ func NewApp(appName string, opts ...zapp.Option) core.IApp {
 		zipkinotel.WithPlugin(), // trace
 		honey.WithPlugin(),      // log
 		pprof.WithPlugin(),      // pprof
+		prometheus.WithPlugin(), // metrics
 	}
 
 	uAppOpts := makeUAppOpts(appName)
