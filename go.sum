@@ -959,8 +959,8 @@ github.com/zly-app/plugin/honey v0.2.7 h1:9PlLDcSFbmdo78IaLnxxsP+AMiAyz9TD7va74h
 github.com/zly-app/plugin/honey v0.2.7/go.mod h1:hmz+RXc1SqSO4+iNUSftbFodpAXN+7ybPOQ7BRCp3oQ=
 github.com/zly-app/plugin/pprof v0.0.0-20240404071939-b8be0d638d18 h1:Bxup609qJMhCFE2x3tli6HpOzCJwXEoXCTawNkD6t9o=
 github.com/zly-app/plugin/pprof v0.0.0-20240404071939-b8be0d638d18/go.mod h1:k8x215NA/3cjKvORkDdv/fP4TnVoKcmpEWpbPm5q2Zc=
-github.com/zly-app/plugin/prometheus v0.0.0-20240724074345-9bc145c94378 h1:x63vAQs3mL1iRogn1F/E4nbMQ6lc6EqAzmAN7fbdrjg=
-github.com/zly-app/plugin/prometheus v0.0.0-20240724074345-9bc145c94378/go.mod h1:J/Hno2q3PZh50JBM+kBv8phPH69cRSp8AyeZk/GvYIE=
+github.com/zly-app/plugin/prometheus v0.0.0-20240724082005-93fa813d2442 h1:maZMig55ESvGxvkVePRq3mKC2GnoPDOtd1TyuIDTz7A=
+github.com/zly-app/plugin/prometheus v0.0.0-20240724082005-93fa813d2442/go.mod h1:J/Hno2q3PZh50JBM+kBv8phPH69cRSp8AyeZk/GvYIE=
 github.com/zly-app/plugin/zipkinotel v0.0.4-0.20230426111850-46dfe8802ab9 h1:dMDdDgvISnCEVjSz/8yHZ1zRFMhIDbrwqM65E11ACxY=
 github.com/zly-app/plugin/zipkinotel v0.0.4-0.20230426111850-46dfe8802ab9/go.mod h1:0tvhuJ8Q/knj6aAu8N4pYkMZmQ8U4XYk5bgYjl0jP0Q=
 github.com/zly-app/service/api v0.0.0-20220430055931-779fb32fc812 h1:3ULBQicxfHKLGVElBX4pLSRITFP12pt66N3CtQRcXw0=

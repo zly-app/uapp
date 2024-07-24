@@ -16,7 +16,7 @@ require (
 	github.com/zly-app/component/xorm v0.0.0-20230824094845-61b5589c9423
 	github.com/zly-app/plugin/honey v0.2.7
 	github.com/zly-app/plugin/pprof v0.0.0-20240404071939-b8be0d638d18
-	github.com/zly-app/plugin/prometheus v0.0.0-20240724074345-9bc145c94378
+	github.com/zly-app/plugin/prometheus v0.0.0-20240724082005-93fa813d2442
 	github.com/zly-app/plugin/zipkinotel v0.0.4-0.20230426111850-46dfe8802ab9
 	github.com/zly-app/zapp v1.3.17
 	go.uber.org/zap v1.27.0
