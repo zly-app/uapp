@@ -21,21 +21,12 @@ apollo配置等功能.
 ```go
 app := uapp.NewApp("zapp.test")
 defer app.Exit()
-
-c := uapp.GetComponent() // 获取组件
 ```
 
 # 提供的功能
 
 ## 组件
 
-+ [x] [es7](https://github.com/zly-app/component/tree/master/es7)
-+ [x] [mongo](https://github.com/zly-app/component/tree/master/mongo)
-+ [x] [redis](https://github.com/zly-app/component/tree/master/redis)
-+ [x] [sqlx](https://github.com/zly-app/component/tree/master/sqlx)
-+ [x] [xorm](https://github.com/zly-app/component/tree/master/xorm)
-+ [x] [pulsar](https://github.com/zly-app/component/tree/master/pulsar-producer)
-+ [x] [cache](https://github.com/zly-app/cache) 透明读缓存
 + [x] [http.ReplaceStd](https://github.com/zly-app/component/tree/master/http) 替换 http 包的的 DefaultClient 和 DefaultTransport 以默认支持相关监测
 
 ## 插件

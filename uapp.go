@@ -25,16 +25,29 @@ import (
 
 func NewApp(appName string, opts ...zapp.Option) core.IApp {
 	allOpts := []zapp.Option{
-		zapp.CustomComponentFns(makeCustomComponent), // 自定义组件
-		zapp.WithEnableDaemon(),                      // 启用守护进程
-		zapp.WithIgnoreInjectOfDisablePlugin(true),   // 忽略未启用的插件注入
-		zapp.WithIgnoreInjectOfDisableService(true),  // 忽略未启用的服务注入
+		zapp.WithEnableDaemon(),                     // 启用守护进程
+		zapp.WithIgnoreInjectOfDisablePlugin(true),  // 忽略未启用的插件注入
+		zapp.WithIgnoreInjectOfDisableService(true), // 忽略未启用的服务注入
 
 		zipkinotel.WithPlugin(), // trace
 		honey.WithPlugin(),      // log
 		pprof.WithPlugin(),      // pprof
 		prometheus.WithPlugin(), // metrics
 	}
+
+	uAppOpts := makeUAppOpts(appName)
+	allOpts = append(allOpts, uAppOpts...)
+
+	allOpts = append(allOpts, opts...)
+	app := zapp.NewApp(appName, allOpts...)
+
+	http.ReplaceStd()
+
+	return app
+}
+
+func NewAppNotPlugins(appName string, opts ...zapp.Option) core.IApp {
+	allOpts := []zapp.Option{}
 
 	uAppOpts := makeUAppOpts(appName)
 	allOpts = append(allOpts, uAppOpts...)
