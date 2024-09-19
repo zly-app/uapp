@@ -35,6 +35,15 @@ func NewApp(appName string, opts ...zapp.Option) core.IApp {
 		prometheus.WithPlugin(), // metrics
 	}
 
+	// 兼容 WithEnableDaemon 参数
+	if len(os.Args) >= 2 {
+		switch os.Args[1] {
+		case "install", "remove", "start", "stop", "status":
+		case "-install", "-remove", "-start", "-stop", "-status", "-h":
+			return zapp.NewApp(appName, allOpts...)
+		}
+	}
+
 	uAppOpts := makeUAppOpts(appName)
 	allOpts = append(allOpts, uAppOpts...)
 
