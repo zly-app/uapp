@@ -38,8 +38,8 @@ func NewApp(appName string, opts ...zapp.Option) core.IApp {
 	// 兼容 WithEnableDaemon 参数
 	if len(os.Args) >= 2 {
 		switch os.Args[1] {
-		case "install", "remove", "start", "stop", "status":
-		case "-install", "-remove", "-start", "-stop", "-status", "-h":
+		case "install", "remove", "start", "stop", "restart", "status", "uninstall":
+		case "-install", "-remove", "-start", "-stop", "-restart", "-status", "-uninstall", "-h":
 			return zapp.NewApp(appName, allOpts...)
 		}
 	}
