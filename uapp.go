@@ -140,8 +140,8 @@ func makeUAppOpts(appName string) []zapp.Option {
 	}
 
 	// 当没有启用应用配置时, 读取默认配置文件的数据并覆盖uapp, 允许用户通过命令行-conf覆盖所有配置
-	appConf := config.NewConfig(appName, config.WithoutFlag())
-	err := vi.MergeConfigMap(appConf.GetViper().AllSettings())
+	appConf := loadDefaultFiles()
+	err := vi.MergeConfigMap(appConf.AllSettings())
 	if err != nil {
 		logger.Log.Fatal("合并用户默认配置文件数据时错误", zap.Error(err))
 	}
@@ -156,6 +156,29 @@ func makeUAppOpts(appName string) []zapp.Option {
 		)
 	}
 	return opts
+}
+
+// 加载默认配置文件, 默认配置文件不存在返回nil
+func loadDefaultFiles() *viper.Viper {
+	files := strings.Split(consts.DefaultConfigFiles, ",")
+	vi := newViper()
+	for _, file := range files {
+		_, err := os.Stat(file)
+		if err != nil {
+			if os.IsNotExist(err) {
+				continue
+			}
+			logger.Log.Fatal("读取配置文件信息失败", zap.String("file", file), zap.Error(err))
+		}
+
+		vi.SetConfigFile(file)
+		if err = vi.MergeInConfig(); err != nil {
+			logger.Log.Fatal("合并配置文件失败", zap.String("file", file), zap.Error(err))
+		}
+		logger.Log.Info("使用默认配置文件", zap.String("file", file))
+		return vi
+	}
+	return nil
 }
 
 func newViper() *viper.Viper {
