@@ -71,7 +71,7 @@ func NewAppNotPlugins(appName string, opts ...zapp.Option) core.IApp {
 
 // 生成uApp选项
 func makeUAppOpts(appName string) []zapp.Option {
-	vi := viper.New()
+	vi := newViper()
 
 	allowApollo := os.Getenv("ApolloAddress") != ""
 
@@ -156,4 +156,8 @@ func makeUAppOpts(appName string) []zapp.Option {
 		)
 	}
 	return opts
+}
+
+func newViper() *viper.Viper {
+	return viper.NewWithOptions(viper.KeyDelimiter(`\/empty_delimiter\/`))
 }
