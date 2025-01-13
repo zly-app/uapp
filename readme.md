@@ -52,9 +52,17 @@ defer app.Exit()
 
 ![](src/assets/example/create_uapp.png)
 
+然后添加相关的配置
+
+![](src/assets/example/uapp_config_new.png)
+
+<details>
+<summary>旧的配置方式</summary>
 然后在 `application` 中添加好相关配置. 其格式默认为 `yaml`
 
 ![](src/assets/example/uapp_config.png)
+
+</details>
 
 此时 `uapp配置` 就完成了.
 
@@ -80,6 +88,8 @@ defer app.Exit()
 
 环境配置完成后就可以启动程序了.
 
-程序启动时 `upp` 读取`${ApolloUAppID}`作为 `uapp配置` 从`apollo` 加载配置的依据. 然读取`${ApolloAppId}` 作为`应用配置`从`apollo`加载配置的依据, 如果有重复配置`应用配置`会覆盖掉 `uapp配置`. 相当于 `uapp` 的配置作为一个基础配置数据.
+程序启动时 `upp` 读取`${ApolloUAppID}`对应的apollo配置作为 `uapp配置`. 然后读取`${ApolloAppId}`对应的apollo配置作为`应用配置`, 如果有重复配置则 `应用配置`会覆盖掉 `uapp配置`. 相当于 `uapp` 的配置作为一个基础配置数据, 而`应用配置`能做个性化的变更.
 
-如果 `${ApolloDisableApolloApp}` 为 `true`, 则不会加载`应用配置`, 使用者可以根据`zapp`支持的配置加载方式自行处理`应用配置`.
+如果 `${ApolloDisableApolloApp}` 为 `true`, 则从默认配置文件加载`应用配置`.
+
+注意. 用户通过代码或参数向`uapp`/`zapp`传入配置加载方式则会完全替换掉`uapp`/`应用配置`.
