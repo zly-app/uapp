@@ -9,7 +9,7 @@ require (
 	github.com/zly-app/plugin/honey v0.2.7
 	github.com/zly-app/plugin/pprof v0.0.0-20240404071939-b8be0d638d18
 	github.com/zly-app/plugin/prometheus v0.0.0-20240724082005-93fa813d2442
-	github.com/zly-app/plugin/zipkinotel v0.0.4-0.20230426111850-46dfe8802ab9
+	github.com/zly-app/plugin/zipkinotel v0.0.4
 	github.com/zly-app/zapp v1.3.17
 	go.uber.org/zap v1.27.0
 )
@@ -32,7 +32,7 @@ require (
 	github.com/fatih/structs v1.1.0 // indirect
 	github.com/flosch/pongo2/v4 v4.0.1 // indirect
 	github.com/fsnotify/fsnotify v1.4.9 // indirect
-	github.com/go-logr/logr v1.2.4 // indirect
+	github.com/go-logr/logr v1.4.2 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
 	github.com/go-ole/go-ole v1.2.6 // indirect
 	github.com/go-playground/locales v0.13.0 // indirect
@@ -92,11 +92,12 @@ require (
 	github.com/zly-app/honey v0.2.10 // indirect
 	github.com/zly-app/service/api v0.0.0-20220430055931-779fb32fc812 // indirect
 	github.com/zlyuancn/zretry v0.0.0-20220514032503-d78bfd22a441 // indirect
-	go.opentelemetry.io/otel v1.16.0 // indirect
+	go.opentelemetry.io/auto/sdk v1.1.0 // indirect
+	go.opentelemetry.io/otel v1.35.0 // indirect
 	go.opentelemetry.io/otel/bridge/opentracing v1.13.0 // indirect
-	go.opentelemetry.io/otel/metric v1.16.0 // indirect
+	go.opentelemetry.io/otel/metric v1.35.0 // indirect
 	go.opentelemetry.io/otel/sdk v1.16.0 // indirect
-	go.opentelemetry.io/otel/trace v1.16.0 // indirect
+	go.opentelemetry.io/otel/trace v1.35.0 // indirect
 	go.uber.org/automaxprocs v1.5.1 // indirect
 	go.uber.org/multierr v1.10.0 // indirect
 	golang.org/x/arch v0.0.0-20210923205945-b76863e36670 // indirect
