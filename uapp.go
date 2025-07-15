@@ -176,9 +176,8 @@ func loadDefaultFiles() *viper.Viper {
 			logger.Log.Fatal("合并配置文件失败", zap.String("file", file), zap.Error(err))
 		}
 		logger.Log.Info("使用默认配置文件", zap.String("file", file))
-		return vi
 	}
-	return nil
+	return vi
 }
 
 func newViper() *viper.Viper {
