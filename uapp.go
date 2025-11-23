@@ -7,8 +7,7 @@ import (
 	"github.com/spf13/cast"
 	"github.com/spf13/viper"
 	"github.com/zly-app/component/http"
-	"github.com/zly-app/plugin/honey"
-	"github.com/zly-app/plugin/zipkinotel"
+	"github.com/zly-app/plugin/otlp"
 	"github.com/zly-app/zapp"
 	"github.com/zly-app/zapp/config"
 	"github.com/zly-app/zapp/consts"
@@ -17,8 +16,6 @@ import (
 	"github.com/zly-app/zapp/pkg/utils"
 	"github.com/zly-app/zapp/plugin/apollo_provider"
 	"go.uber.org/zap"
-
-	"github.com/zly-app/plugin/prometheus"
 
 	"github.com/zly-app/plugin/pprof"
 )
@@ -33,10 +30,8 @@ func NewApp(appName string, opts ...zapp.Option) core.IApp {
 		zapp.WithIgnoreInjectOfDisablePlugin(true),  // 忽略未启用的插件注入
 		zapp.WithIgnoreInjectOfDisableService(true), // 忽略未启用的服务注入
 
-		zipkinotel.WithPlugin(), // trace
-		honey.WithPlugin(),      // log
-		pprof.WithPlugin(),      // pprof
-		prometheus.WithPlugin(), // metrics
+		pprof.WithPlugin(), // pprof
+		otlp.WithPlugin(),
 	}
 
 	// 兼容 WithEnableDaemon 参数
@@ -60,7 +55,20 @@ func NewApp(appName string, opts ...zapp.Option) core.IApp {
 }
 
 func NewAppNotPlugins(appName string, opts ...zapp.Option) core.IApp {
+	if appName == "" {
+		logger.Fatal("appName is empty")
+	}
+
 	allOpts := []zapp.Option{}
+
+	// 兼容 WithEnableDaemon 参数
+	if len(os.Args) >= 2 {
+		switch os.Args[1] {
+		case "install", "remove", "start", "stop", "restart", "status", "uninstall",
+			"-install", "-remove", "-start", "-stop", "-restart", "-status", "-uninstall", "-h":
+			return zapp.NewApp(appName, allOpts...)
+		}
+	}
 
 	uAppOpts := makeUAppOpts(appName)
 	allOpts = append(allOpts, uAppOpts...)
