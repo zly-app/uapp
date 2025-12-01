@@ -7,10 +7,10 @@ toolchain go1.24.1
 require (
 	github.com/spf13/cast v1.3.1
 	github.com/spf13/viper v1.8.1
-	github.com/zly-app/component/http v0.0.0-20240730094824-85f48a26539c
-	github.com/zly-app/plugin/otlp v0.0.0-20251121092617-a549982523d3
-	github.com/zly-app/plugin/pprof v0.0.0-20240404071939-b8be0d638d18
-	github.com/zly-app/zapp v1.3.25
+	github.com/zly-app/component/http v0.0.0-20251201104934-96e59c17144e
+	github.com/zly-app/plugin/otlp v0.0.0-20251201105815-b4c372b9135e
+	github.com/zly-app/plugin/pprof v0.0.0-20251201105815-b4c372b9135e
+	github.com/zly-app/zapp v1.4.0
 	go.uber.org/zap v1.27.0
 )
 

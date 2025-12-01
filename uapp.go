@@ -12,7 +12,7 @@ import (
 	"github.com/zly-app/zapp/config"
 	"github.com/zly-app/zapp/consts"
 	"github.com/zly-app/zapp/core"
-	"github.com/zly-app/zapp/logger"
+	"github.com/zly-app/zapp/log"
 	"github.com/zly-app/zapp/pkg/utils"
 	"github.com/zly-app/zapp/plugin/apollo_provider"
 	"go.uber.org/zap"
@@ -22,7 +22,7 @@ import (
 
 func NewApp(appName string, opts ...zapp.Option) core.IApp {
 	if appName == "" {
-		logger.Fatal("appName is empty")
+		log.Fatal("appName is empty")
 	}
 
 	allOpts := []zapp.Option{
@@ -56,7 +56,7 @@ func NewApp(appName string, opts ...zapp.Option) core.IApp {
 
 func NewAppNotPlugins(appName string, opts ...zapp.Option) core.IApp {
 	if appName == "" {
-		logger.Fatal("appName is empty")
+		log.Fatal("appName is empty")
 	}
 
 	allOpts := []zapp.Option{}
@@ -115,7 +115,7 @@ func makeUAppOpts(appName string) []zapp.Option {
 		// 合并uapp配置
 		err := vi.MergeConfigMap(uAppConfigs)
 		if err != nil {
-			logger.Log.Fatal("合并'uapp配置'时错误", zap.Error(err))
+			log.Log.Fatal("合并'uapp配置'时错误", zap.Error(err))
 		}
 	}
 
@@ -155,7 +155,7 @@ func makeUAppOpts(appName string) []zapp.Option {
 	appConf := loadDefaultFiles()
 	err := vi.MergeConfigMap(appConf.AllSettings())
 	if err != nil {
-		logger.Log.Fatal("合并用户默认配置文件数据时错误", zap.Error(err))
+		log.Log.Fatal("合并用户默认配置文件数据时错误", zap.Error(err))
 	}
 
 	opts := []zapp.Option{
@@ -180,14 +180,14 @@ func loadDefaultFiles() *viper.Viper {
 			if os.IsNotExist(err) {
 				continue
 			}
-			logger.Log.Fatal("读取配置文件信息失败", zap.String("file", file), zap.Error(err))
+			log.Log.Fatal("读取配置文件信息失败", zap.String("file", file), zap.Error(err))
 		}
 
 		vi.SetConfigFile(file)
 		if err = vi.MergeInConfig(); err != nil {
-			logger.Log.Fatal("合并配置文件失败", zap.String("file", file), zap.Error(err))
+			log.Log.Fatal("合并配置文件失败", zap.String("file", file), zap.Error(err))
 		}
-		logger.Log.Info("使用默认配置文件", zap.String("file", file))
+		log.Log.Info("使用默认配置文件", zap.String("file", file))
 		return vi
 	}
 	return vi
