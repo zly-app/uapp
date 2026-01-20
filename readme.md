@@ -86,7 +86,7 @@ defer app.Exit()
 | ApolloNamespaces              | 否       | 其他自定义命名空间                                                                                     |           |
 | ApolloIgnoreNamespaceNotFound | 否       | 忽略其他自定义命名空间不存在                                                                           |           |
 
-环境配置完成后就可以启动程序了.
+环境配置完成后就可以启动程序了. 当然, 可以使用命令行来覆盖环境变量的值. 如 `myapp -ApolloAddress="http://localhost:8080"`
 
 程序启动时 `upp` 读取`${ApolloUAppID}`对应的apollo配置作为 `uapp配置`. 然后读取`${ApolloAppId}`对应的apollo配置作为`应用配置`, 如果有重复配置则 `应用配置`会覆盖掉 `uapp配置`. 相当于 `uapp` 的配置作为一个基础配置数据, 而`应用配置`能做个性化的变更.
 

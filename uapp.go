@@ -4,7 +4,6 @@ import (
 	"os"
 	"strings"
 
-	"github.com/spf13/cast"
 	"github.com/spf13/viper"
 	"github.com/zly-app/component/http"
 	"github.com/zly-app/plugin/otlp"
@@ -24,6 +23,8 @@ func NewApp(appName string, opts ...zapp.Option) core.IApp {
 	if appName == "" {
 		log.Fatal("appName is empty")
 	}
+
+	initConfig()
 
 	allOpts := []zapp.Option{
 		zapp.WithEnableDaemon(),                     // 启用守护进程
@@ -59,6 +60,8 @@ func NewAppNotPlugins(appName string, opts ...zapp.Option) core.IApp {
 		log.Fatal("appName is empty")
 	}
 
+	initConfig()
+
 	allOpts := []zapp.Option{}
 
 	// 兼容 WithEnableDaemon 参数
@@ -83,23 +86,24 @@ func NewAppNotPlugins(appName string, opts ...zapp.Option) core.IApp {
 
 // 生成uApp选项
 func makeUAppOpts(appName string) []zapp.Option {
+	cl := getConfig()
 	vi := newViper()
 
-	allowApollo := os.Getenv("ApolloAddress") != ""
+	allowApollo := *cl.ApolloAddress != ""
 
 	// uapp 配置
-	if allowApollo && strings.ToLower(os.Getenv("ApolloDisableApolloUApp")) != "true" {
+	if allowApollo && !*cl.ApolloDisableApolloUApp {
 		// uapp配置
 		uAppApolloConfig := &config.ApolloConfig{
-			Address:                 os.Getenv("ApolloAddress"),
-			AppId:                   utils.Ternary.Or(os.Getenv("ApolloUAppID"), "uapp").(string),
-			AccessKey:               os.Getenv("ApolloAccessKey"),
-			AuthBasicUser:           os.Getenv("ApolloAuthBasicUser"),
-			AuthBasicPassword:       os.Getenv("ApolloAuthBasicPassword"),
-			Cluster:                 utils.Ternary.Or(os.Getenv("ApolloCluster"), "default").(string),
-			AlwaysLoadFromRemote:    cast.ToBool(os.Getenv("ApolloAlwaysLoadFromRemote")),
-			BackupFile:              os.Getenv("ApolloBackupFile"),
-			ApplicationDataType:     os.Getenv("ApolloApplicationDataType"),
+			Address:                 *cl.ApolloAddress,
+			AppId:                   utils.Ternary.Or(*cl.ApolloUAppID, "uapp").(string),
+			AccessKey:               *cl.ApolloAccessKey,
+			AuthBasicUser:           *cl.ApolloAuthBasicUser,
+			AuthBasicPassword:       *cl.ApolloAuthBasicPassword,
+			Cluster:                 utils.Ternary.Or(*cl.ApolloCluster, "default").(string),
+			AlwaysLoadFromRemote:    *cl.ApolloAlwaysLoadFromRemote,
+			BackupFile:              *cl.ApolloBackupFile,
+			ApplicationDataType:     *cl.ApolloApplicationDataType,
 			ApplicationParseKeys:    nil,
 			Namespaces:              nil,
 			IgnoreNamespaceNotFound: false,
@@ -120,24 +124,24 @@ func makeUAppOpts(appName string) []zapp.Option {
 	}
 
 	// 应用配置, 这里仍然允许用户通过命令行覆盖配置
-	if allowApollo && strings.ToLower(os.Getenv("ApolloDisableApolloApp")) != "true" {
+	if allowApollo && !*cl.ApolloDisableApolloApp {
 		appApolloConfig := &config.ApolloConfig{
-			Address:                 os.Getenv("ApolloAddress"),
-			AppId:                   utils.Ternary.Or(os.Getenv("ApolloAppId"), appName).(string),
-			AccessKey:               os.Getenv("ApolloAccessKey"),
-			AuthBasicUser:           os.Getenv("ApolloAuthBasicUser"),
-			AuthBasicPassword:       os.Getenv("ApolloAuthBasicPassword"),
-			Cluster:                 utils.Ternary.Or(os.Getenv("ApolloCluster"), "default").(string),
-			AlwaysLoadFromRemote:    cast.ToBool(os.Getenv("ApolloAlwaysLoadFromRemote")),
-			BackupFile:              os.Getenv("ApolloBackupFile"),
-			ApplicationDataType:     os.Getenv("ApolloApplicationDataType"),
-			IgnoreNamespaceNotFound: cast.ToBool(os.Getenv("ApolloIgnoreNamespaceNotFound")),
+			Address:                 *cl.ApolloAddress,
+			AppId:                   utils.Ternary.Or(*cl.ApolloAppId, appName).(string),
+			AccessKey:               *cl.ApolloAccessKey,
+			AuthBasicUser:           *cl.ApolloAuthBasicUser,
+			AuthBasicPassword:       *cl.ApolloAuthBasicPassword,
+			Cluster:                 utils.Ternary.Or(*cl.ApolloCluster, "default").(string),
+			AlwaysLoadFromRemote:    *cl.ApolloAlwaysLoadFromRemote,
+			BackupFile:              *cl.ApolloBackupFile,
+			ApplicationDataType:     *cl.ApolloApplicationDataType,
+			IgnoreNamespaceNotFound: *cl.ApolloIgnoreNamespaceNotFound,
 		}
-		applicationParseKeys := os.Getenv("ApolloApplicationParseKeys")
+		applicationParseKeys := *cl.ApolloApplicationParseKeys
 		if applicationParseKeys != "" {
 			appApolloConfig.ApplicationParseKeys = strings.Split(applicationParseKeys, ",")
 		}
-		namespaces := os.Getenv("ApolloNamespaces")
+		namespaces := *cl.ApolloNamespaces
 		if namespaces != "" {
 			appApolloConfig.Namespaces = strings.Split(namespaces, ",")
 		}

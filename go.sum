@@ -325,8 +325,8 @@ github.com/zly-app/plugin/otlp v0.0.0-20251201105815-b4c372b9135e h1:dMUVOspYFGV
 github.com/zly-app/plugin/otlp v0.0.0-20251201105815-b4c372b9135e/go.mod h1:PM30ztb4rxLcxl1dcB7WodNxRQgaZs0YXEEQRTULnd0=
 github.com/zly-app/plugin/pprof v0.0.0-20251201105815-b4c372b9135e h1:RB1VUYrKTaCO59yePxd+llmyX4I/zFzB00D9Ocnulv8=
 github.com/zly-app/plugin/pprof v0.0.0-20251201105815-b4c372b9135e/go.mod h1:VoGzG+6ivB+wSi1tK8Q3/+U9VPZeHv4NZj7QdBuyEVo=
-github.com/zly-app/zapp v1.4.0 h1:jEwEOEPreBgFQirsfPaA0ZquWfX6CgpmIKnFv8ODKNk=
-github.com/zly-app/zapp v1.4.0/go.mod h1:XrmFCgaBQHYdxTzr35s/wymDJO/DwWoYd/0ZRfZDceQ=
+github.com/zly-app/zapp v1.4.3 h1:LkG2VKOPVK15b0igB5HOlIG3QpcgplEg7/O9J6+aAwY=
+github.com/zly-app/zapp v1.4.3/go.mod h1:VrAeA6NbJ6Dz7l1pWRb8EKEyVeek52XTc93Lt82wA+o=
 go.etcd.io/etcd/api/v3 v3.5.0/go.mod h1:cbVKeC6lCfl7j/8jBhAK6aIYO9XOjdptoxU/nLQcPvs=
 go.etcd.io/etcd/client/pkg/v3 v3.5.0/go.mod h1:IJHfcCEKxYu1Os13ZdwCwIUTUVGYTSAM3YSwc9/Ac1g=
 go.etcd.io/etcd/client/v2 v2.305.0/go.mod h1:h9puh54ZTgAKtEbut2oe9P4L/oqKCVB6xsXlzd7alYQ=
