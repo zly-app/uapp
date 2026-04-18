@@ -21,6 +21,8 @@ apollo配置等功能.
 ```go
 app := uapp.NewApp("zapp.test")
 defer app.Exit()
+
+app.Run()
 ```
 
 # 提供的功能
