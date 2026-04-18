@@ -95,3 +95,28 @@ app.Run()
 如果 `${ApolloDisableApolloApp}` 为 `true`, 则从默认配置文件加载`应用配置`.
 
 注意. 用户通过代码或参数向`uapp`/`zapp`传入配置加载方式则会完全替换掉`uapp`/`应用配置`.
+
+# 脚手架文档
+
+| 需求关键词 | 工具 | 文档 |
+|------------|------|------|
+| HTTP API / RESTful / 网关 | grpc (grpc-gateway) | [01-grpc.md](src/scaffold/01-grpc.md) |
+| gRPC / protobuf / RPC | grpc | [01-grpc.md](src/scaffold/01-grpc.md) |
+| Redis / KV 存储 | redis | [02-redis.md](src/scaffold/02-redis.md) |
+| 分布式锁 / 互斥 / 续期 | redis_tool | [02-redis.md](src/scaffold/02-redis.md) |
+| 调用外部HTTP / HTTP客户端 | http | [03-http.md](src/scaffold/03-http.md) |
+| MySQL / PostgreSQL / SQL数据库 | sqlx | [04-sqlx.md](src/scaffold/04-sqlx.md) |
+| 本地缓存 / 多级缓存 | cache | [05-cache.md](src/scaffold/05-cache.md) |
+| 定时加载 / 数据预热 / 配置刷新 | loopload | [06-loopload.md](src/scaffold/06-loopload.md) |
+| 定时任务 / Cron / 周期执行 | cron | [07-cron.md](src/scaffold/07-cron.md) |
+| 协程池 / 并发 / 异步 | gpool | [08-gpool.md](src/scaffold/08-gpool.md) |
+| 消息 / 事件 / 发布订阅 | msgbus | [09-msgbus.md](src/scaffold/09-msgbus.md) |
+| 指标 / 监控 / Counter / Histogram | metrics | [10-metrics.md](src/scaffold/10-metrics.md) |
+| 配置 / 热更新 / Apollo | config | [11-config.md](src/scaffold/11-config.md) |
+| 单飞 / 防击穿 | zsingleflight | [12-utils.md](src/scaffold/12-utils.md) |
+| 批量写入 / 轮转 | rotate | [12-utils.md](src/scaffold/12-utils.md) |
+| 重试 / Retry | zretry | [12-utils.md](src/scaffold/12-utils.md) |
+| 并发等待 / Recover / Context克隆 | zapp/pkg/utils | [12-utils.md](src/scaffold/12-utils.md) |
+| 原子值 / 时间解析 | zutils | [12-utils.md](src/scaffold/12-utils.md) |
+
+场景组合/插件/设计模式 → [总览](src/scaffold/00-overview.md) ｜ 项目结构模板 → [项目结构与集成指南](src/scaffold/13-project-structure.md)
