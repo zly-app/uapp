@@ -1,4 +1,4 @@
-# Redis + redis_tool — Redis 客户端与分布式锁
+# Redis + redis_tool — Redis 客户端与分布式锁与原子操作
 
 ## Redis 客户端
 
@@ -78,7 +78,7 @@ func main() {
 
 ---
 
-## redis_tool — Redis 分布式锁
+## redis_tool — Redis 分布式锁与原子操作
 
 > 导入: `github.com/zlyuancn/redis_tool`
 
@@ -88,6 +88,10 @@ func main() {
 - **Lock/UnLock**: 手动锁，需自行管理解锁
 - **RenewLock**: 锁续期
 - **CheckLockCheckCode**: 授权码验证
+- **CompareAndSwap**: CAS 原子交换
+- **CompareAndDel**: 条件删除（值匹配才删除）
+- **CompareAndExpire**: 条件设置过期（值匹配才设置 TTL）
+- **GetRedis**: 获取 Redis 客户端
 
 ### 初始化
 
@@ -123,6 +127,22 @@ redis_tool.RenewLock(ctx, lockKey, checkCode, newTtl)
 
 // 验证授权码
 redis_tool.CheckLockCheckCode(ctx, key, authCode)
+```
+
+```go
+// CAS 原子交换: key 的值从 v1 变为 v2
+ok, err := redis_tool.CompareAndSwap(ctx, key, oldValue, newValue)
+
+// 条件删除: key 的值等于 value 时删除
+ok, err := redis_tool.CompareAndDel(ctx, key, value)
+
+// 条件设置过期: key 的值等于 value 时设置 TTL
+ok, err := redis_tool.CompareAndExpire(ctx, key, value, 10*time.Minute)
+```
+
+```go
+// 获取 Redis 客户端（与 component/redis 共享同一实例）
+client, err := redis_tool.GetRedis()
 ```
 
 ### 类型
@@ -163,6 +183,30 @@ func (p *Processor) Run(ctx context.Context) error {
 
     // 执行长时间任务...
     defer redis_tool.UnLock(ctx, p.lockKey, checkCode)
+    return nil
+}
+
+// 场景3: CAS 原子交换 (如状态流转)
+func (s *Service) TransitionState(ctx context.Context, id string) error {
+    // 仅当状态为 "pending" 时才切换为 "processing"
+    ok, err := redis_tool.CompareAndSwap(ctx, fmt.Sprintf("state:%s", id), "pending", "processing")
+    if err != nil { return err }
+    if !ok {
+        return fmt.Errorf("状态不是 pending，无法切换")
+    }
+
+    // 执行处理逻辑...
+    return nil
+}
+
+// 场景4: 条件删除 (如清理特定值的缓存标记)
+func (s *Service) ClearFlag(ctx context.Context, id string) error {
+    ok, err := redis_tool.CompareAndDel(ctx, fmt.Sprintf("flag:%s", id), "active")
+    if err != nil { return err }
+    if !ok {
+        // 值不匹配或 key 不存在，无需删除
+        return nil
+    }
     return nil
 }
 ```

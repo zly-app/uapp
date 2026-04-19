@@ -49,20 +49,20 @@ components:
 ```go
 import "github.com/zly-app/cache/v2"
 
-// 获取默认缓存
-c := cache.GetDefCache()
+// 获取默认缓存（通过 Creator）
+c := cache.GetCacheCreator().GetDefCache()
 
 // 获取命名缓存
-c := cache.GetCache("my-cache")
+c := cache.GetCacheCreator().GetCache("my-cache")
 ```
 
 ### 2. Get — 读取（缓存未命中自动加载）
 
 ```go
 var result MyData
-err := cache.GetDefCache().Get(ctx, "user:123", &result,
-    cache.WithLoadFn(func(ctx context.Context) (interface{}, error) {
-        // 从数据库加载
+err := cache.GetCacheCreator().GetDefCache().Get(ctx, "user:123", &result,
+    cache.WithLoadFn(func(ctx context.Context, key string) (interface{}, error) {
+        // key 为缓存键名，可用于日志或条件加载
         data, err := loadFromDB(ctx, 123)
         return data, err
     }),
@@ -72,7 +72,7 @@ err := cache.GetDefCache().Get(ctx, "user:123", &result,
 ### 3. Set — 写入
 
 ```go
-err := cache.GetDefCache().Set(ctx, "user:123", &data,
+err := cache.GetCacheCreator().GetDefCache().Set(ctx, "user:123", &data,
     cache.WithExpire(600),  // 可选: 覆盖默认过期时间
 )
 ```
@@ -80,15 +80,16 @@ err := cache.GetDefCache().Set(ctx, "user:123", &data,
 ### 4. Del — 删除
 
 ```go
-err := cache.GetDefCache().Del(ctx, "user:123")
+err := cache.GetCacheCreator().GetDefCache().Del(ctx, "user:123")              // 单个 key
+err := cache.GetCacheCreator().GetDefCache().Del(ctx, "user:123", "user:456")  // 多个 key（可变参数）
 ```
 
 ### 5. SingleFlightDo — 单飞执行（忽略缓存）
 
 ```go
 var result MyData
-err := cache.GetDefCache().SingleFlightDo(ctx, "user:123", &result,
-    cache.WithLoadFn(func(ctx context.Context) (interface{}, error) {
+err := cache.GetCacheCreator().GetDefCache().SingleFlightDo(ctx, "user:123", &result,
+    cache.WithLoadFn(func(ctx context.Context, key string) (interface{}, error) {
         return loadFromDB(ctx, 123)
     }),
 )
@@ -97,11 +98,11 @@ err := cache.GetDefCache().SingleFlightDo(ctx, "user:123", &result,
 ### 6. 选项
 
 ```go
-cache.WithLoadFn(fn)         // 设置加载函数
-cache.WithExpire(seconds)    // 覆盖过期时间
-cache.WithForceLoad(true)    // 强制重新加载（忽略缓存）
-cache.WithSerializer("json") // 覆盖序列化器
-cache.WithCompactor("zstd")  // 覆盖压缩器
+cache.WithLoadFn(fn)                          // 设置加载函数，签名为 func(ctx context.Context, key string) (interface{}, error)
+cache.WithExpire(seconds)                     // 覆盖过期时间（秒，<0 表示永不过期，0 使用默认值）
+cache.WithForceLoad(dontWriteCache bool)      // 强制从加载函数获取，dontWriteCache=true 时不写入缓存
+cache.WithSerializer(serializer)              // 覆盖序列化器（core.ISerializer 接口）
+cache.WithCompactor(compactor)                // 覆盖压缩器（core.ICompactor 接口）
 ```
 
 ### 典型使用场景: 查询缓存
@@ -110,8 +111,8 @@ cache.WithCompactor("zstd")  // 覆盖压缩器
 func (q *QueryEngine) GetUserInfo(ctx context.Context, userID int64) (*UserInfo, error) {
     key := fmt.Sprintf("user:info:%d", userID)
     var info UserInfo
-    err := cache.GetDefCache().Get(ctx, key, &info,
-        cache.WithLoadFn(func(ctx context.Context) (interface{}, error) {
+    err := cache.GetCacheCreator().GetDefCache().Get(ctx, key, &info,
+        cache.WithLoadFn(func(ctx context.Context, key string) (interface{}, error) {
             return q.loadUserInfoFromDB(ctx, userID)
         }),
         cache.WithExpire(300),

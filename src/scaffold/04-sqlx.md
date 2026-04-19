@@ -30,12 +30,14 @@ components:
 ```go
 import "github.com/zly-app/component/sqlx"
 
-// 获取默认客户端
-client := sqlx.GetDefClient()
+// 获取默认客户端（通过 Creator 接口）
+client := sqlx.GetCreator().GetDefClient()
 
 // 获取命名客户端
-client := sqlx.GetClient("my-db")
+client := sqlx.GetCreator().GetClient("my-db")
 ```
+
+> **注意**: `sqlx.GetDefClient()` 和 `sqlx.GetClient()` 不是包级函数，需通过 `sqlx.GetCreator()` 获取 Creator 接口后调用。
 
 ### 2. 查询
 
@@ -49,7 +51,7 @@ var user User
 err := client.FindOne(ctx, &user, "SELECT * FROM users WHERE id = ?", id)
 
 // 列查询
-var names []string
+var names []interface{}
 err := client.FindColumn(ctx, &names, "SELECT name FROM users")
 ```
 
@@ -76,16 +78,18 @@ err := client.Query(ctx, func(rows *sql.Rows) error {
 ### 5. 事务
 
 ```go
-// 标准事务
-err := client.Transaction(ctx, func(tx sqlx.Tx) error {
+// 标准事务（回调函数接收 ctx）
+// Tx 接口方法: Exec, Query, FindColumn, FindToStructs
+err := sqlx.GetCreator().GetDefClient().Transaction(ctx, func(ctx context.Context, tx sqlx.Tx) error {
     _, err := tx.Exec(ctx, "UPDATE accounts SET balance = balance - ? WHERE id = ?", amount, fromID)
     if err != nil { return err }
     _, err = tx.Exec(ctx, "UPDATE accounts SET balance = balance + ? WHERE id = ?", amount, toID)
     return err
 })
 
-// 扩展事务（支持 struct 扫描）
-err := client.TransactionX(ctx, func(tx sqlx.Txx) error {
+// 扩展事务（支持 struct 扫描，回调函数接收 ctx）
+// Txx 接口方法: Find, FindOne, FindColumn, Exec, Query + Unsafe 模式
+err := sqlx.GetCreator().GetDefClient().TransactionX(ctx, func(ctx context.Context, tx sqlx.Txx) error {
     var user User
     err := tx.FindOne(ctx, &user, "SELECT * FROM users WHERE id = ? FOR UPDATE", id)
     // ...
@@ -93,11 +97,13 @@ err := client.TransactionX(ctx, func(tx sqlx.Txx) error {
 })
 
 // 事务选项
-err := client.Transaction(ctx, fn,
+err := sqlx.GetCreator().GetDefClient().Transaction(ctx, fn,
     sqlx.WithTxIsolation(sql.LevelSerializable),
     sqlx.WithTxReadOnly(true),
 )
 ```
+
+> **注意**: `sqlx.Tx` 接口没有 `FindOne` 方法（仅有 `Exec`、`Query`、`FindColumn`、`FindToStructs`）；如需在事务中使用 `FindOne`，请使用 `TransactionX` 获取 `sqlx.Txx` 接口。
 
 ### 6. 动态 SQL 构建
 
@@ -119,5 +125,5 @@ err = db.GetSqlx().FindOne(ctx, &user, cond, vals...)
 ### 7. 获取底层 DB
 
 ```go
-db := client.GetDB()  // *sqlx.DB
+db := sqlx.GetCreator().GetDefClient().GetDB()  // *sqlx.DB
 ```

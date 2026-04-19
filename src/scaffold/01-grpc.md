@@ -59,8 +59,8 @@ components:
 
 ```go
 app := uapp.NewApp("my-service",
-    grpc.WithService(),        // 启用 gRPC 服务
-    grpc.WithGatewayService(), // 启用 HTTP 网关
+    grpc.WithService(),              // 启用 gRPC 服务
+    grpc.WithGatewayService(),       // 启用 HTTP 网关
 )
 ```
 
@@ -97,6 +97,20 @@ message GetUserRsp {
 pb.RegisterMyServiceServer(grpc.Server("my-service"), logic.NewServer())
 ```
 
+> **同名服务复用 Server**: 同一个 `serverName` 的多个 gRPC 服务会自动复用同一个 `GRpcServer` 实例（共享监听端口和配置）。
+> 对同一个 `serverName` 多次调用 `grpc.Server()` 会触发 panic，正确的做法是只调用一次 `grpc.Server()` 获取注册器，然后在同一个注册器上注册多个服务。
+>
+> ```go
+> // 正确：获取一次注册器，注册多个服务（自动复用同一个 server）
+> registrar := grpc.Server("my-service")
+> pb.RegisterServiceAServer(registrar, implA)
+> pb.RegisterServiceBServer(registrar, implB)
+>
+> // 错误：对同一个 serverName 多次调用 grpc.Server() 会 panic
+> pb.RegisterServiceAServer(grpc.Server("my-service"), implA)
+> pb.RegisterServiceBServer(grpc.Server("my-service"), implB)  // panic!
+> ```
+
 ### 4. 注册 gRPC-Gateway
 
 ```go
@@ -115,20 +129,26 @@ conn := grpc.GetClientConn("my-service")
 client := pb.NewMyServiceClient(conn)
 rsp, err := client.GetUser(ctx, &pb.GetUserReq{Id: 1})
 
-// 带哈希键调用(一致性哈希)
-conn := grpc.GetClientConn("my-service", grpc.WithHashKey("user-123"))
+// 带哈希键调用(一致性哈希) — WithHashKey/WithTarget 是 grpc.CallOption，在 RPC 调用时传入
+rsp, err := client.GetUser(ctx, &pb.GetUserReq{Id: 1}, grpc.WithHashKey("user-123"))
 
 // 指定目标调用
-conn := grpc.GetClientConn("my-service", grpc.WithTarget("10.0.0.1:3300"))
+rsp, err := client.GetUser(ctx, &pb.GetUserReq{Id: 1}, grpc.WithTarget("10.0.0.1:3300"))
 ```
 
 ### 6. 客户端 Hook
 
 ```go
-// 注册全局客户端 Hook (在 init 中)
-grpc.RegistryClientHook("my-hook", func(ctx context.Context, method string) (context.Context, error) {
-    // 在每次 RPC 调用前执行
-    return ctx, nil
+// 注册指定服务的客户端 Hook (在 init 中)
+// Hook 类型为 grpc.UnaryClientInterceptor
+grpc.RegistryClientHook("my-service", func(ctx context.Context, method string, req, reply interface{}, cc *grpc.ClientConn, invoker grpc.UnaryInvoker, opts ...grpc.CallOption) (context.Context, error) {
+    // 在每次 RPC 调用前/后执行
+    return invoker(ctx, method, req, reply, cc, opts...)
+})
+
+// 给所有 client 添加 hook
+grpc.RegistryAllClientHook(func(ctx context.Context, method string, req, reply interface{}, cc *grpc.ClientConn, invoker grpc.UnaryInvoker, opts ...grpc.CallOption) (context.Context, error) {
+    return invoker(ctx, method, req, reply, cc, opts...)
 })
 ```
 
@@ -148,8 +168,8 @@ import (
 
 func main() {
     app := uapp.NewApp("my-service",
-        grpc.WithService(),        // 启用 gRPC 服务
-        grpc.WithGatewayService(), // 启用 HTTP 网关
+        grpc.WithService(),              // 启用 gRPC 服务
+        grpc.WithGatewayService(),       // 启用 HTTP 网关
     )
     defer app.Exit()
 

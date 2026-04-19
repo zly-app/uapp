@@ -74,9 +74,15 @@ cron.RegistryHandler(name, expression, enable, handler)
 ```go
 type IContext interface {
     context.Context
-    TaskName() string          // 任务名
-    AttemptCount() int64       // 当前尝试次数
-    MaxAttemptCount() int64    // 最大尝试次数
+    ILogger                   // 嵌入日志接口
+    Task() ITask              // 获取任务信息
+    Meta() interface{}        // 获取元数据
+    SetMeta(meta interface{}) // 设置元数据
+}
+
+type ITask interface {
+    Name() string             // 任务名
+    // ... 其他任务信息
 }
 ```
 
@@ -86,7 +92,6 @@ type IContext interface {
 package main
 
 import (
-    "context"
     "github.com/zly-app/service/cron"
     "github.com/zly-app/uapp"
 )

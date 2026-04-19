@@ -65,7 +65,6 @@ import (
     pb "my-project/pb"
     "my-project/conf"
     "my-project/logic"
-    "my-project/client/db"
 )
 
 func main() {
@@ -77,8 +76,8 @@ func main() {
 
     // 创建应用
     app := uapp.NewApp("my-service",
-        grpc.WithService(),        // 启用 gRPC 服务
-        grpc.WithGatewayService(), // 启用 HTTP 网关
+        grpc.WithService(),              // 启用 gRPC 服务
+        grpc.WithGatewayService(),       // 启用 HTTP 网关
     )
     defer app.Exit()
 
@@ -114,6 +113,7 @@ import (
     "github.com/zlyuancn/redis_tool"
     "my-project/conf"
     "my-project/handler"
+    "my-project/client/db"
 )
 
 func main() {
@@ -132,7 +132,7 @@ func main() {
     redis_tool.RedisClientName = conf.Conf.RedisName
     redis_tool.ManualInit()
 
-    // 注册定时任务
+    // 注册定时任务 (handler 内通过 db.GetSqlx()/db.GetRedis() 访问数据)
     handler.RegisterCronTasks()
 
     app.Run()
@@ -145,12 +145,59 @@ func main() {
 package main
 
 import (
+    "context"
+    "time"
+
     "github.com/zly-app/uapp"
+    "github.com/zly-app/utils/loopload"
+    "github.com/zly-app/zapp/component/gpool"
+    "github.com/zly-app/zapp/component/msgbus"
     "github.com/zly-app/zapp/config"
+    "github.com/zly-app/zapp/pkg/utils"
     "github.com/zlyuancn/redis_tool"
     "my-project/conf"
-    "my-project/module"
+    "my-project/client/db"
 )
+
+// --- LoopLoad: 周期加载数据到内存 ---
+var userLoader *loopload.LoopLoad[map[int64]*UserInfo]
+
+type UserInfo struct {
+    ID   int64
+    Name string
+}
+
+func init() {
+    userLoader = loopload.New[map[int64]*UserInfo]("user-loader",
+        func(ctx context.Context) (map[int64]*UserInfo, error) {
+            // 从数据库加载全量用户数据
+            return loadAllUsers(ctx)
+        },
+        loopload.WithReloadTime(5*time.Minute),
+    )
+}
+
+// --- MsgBus: 事件订阅 ---
+type UserChangedMsg struct {
+    UserID int64
+    ctx    context.Context
+}
+
+func (m *UserChangedMsg) Ctx() context.Context   { return m.ctx }
+func (m *UserChangedMsg) Topic() string          { return "user.changed" }
+func (m *UserChangedMsg) Msg() interface{}        { return m }
+
+func init() {
+    // 订阅事件，2 个并发处理线程
+    msgbus.Subscribe("user.changed", 2, func(ctx context.Context, msg msgbus.IMsgbusMessage) {
+        m := msg.Msg().(*UserChangedMsg)
+        // 在 gpool 中异步处理，不阻塞消息总线
+        ctx2 := utils.Ctx.CloneContext(ctx)
+        gpool.GetDefGPool().Go(func() error {
+            return processUserChanged(ctx2, m.UserID)
+        }, nil)
+    })
+}
 
 func main() {
     redis_tool.SetManualInit()
@@ -166,10 +213,35 @@ func main() {
     redis_tool.RedisClientName = conf.Conf.RedisName
     redis_tool.ManualInit()
 
-    // 初始化业务模块
-    module.Init()
+    // 使用 LoopLoad 读取缓存数据
+    ctx := context.Background()
+    users := userLoader.Get(ctx)
+    _ = users
+
+    // 使用 gpool 并发处理任务
+    gpool.GetDefGPool().Go(func() error {
+        return runWorker(context.Background())
+    }, nil)
+
+    // 发布事件通知
+    msgbus.Publish(ctx, "user.changed", &UserChangedMsg{UserID: 1, ctx: ctx})
 
     app.Run()
+}
+
+func loadAllUsers(ctx context.Context) (map[int64]*UserInfo, error) {
+    // 从 db 加载
+    return map[int64]*UserInfo{}, nil
+}
+
+func processUserChanged(ctx context.Context, userID int64) error {
+    // 处理用户变更事件
+    return nil
+}
+
+func runWorker(ctx context.Context) error {
+    // 后台任务逻辑
+    return nil
 }
 ```
 
@@ -338,7 +410,7 @@ func GetRedis() (redis.UniversalClient, error) {
 }
 
 func GetSqlx() sqlx.Client {
-    return sqlx.GetClient(conf.Conf.SqlxName)
+    return sqlx.GetCreator().GetClient(conf.Conf.SqlxName)
 }
 ```
 
@@ -349,6 +421,7 @@ package user
 
 import (
     "context"
+    "github.com/didi/gendry/builder"
     "my-project/client/db"
     "my-project/model"
 )
@@ -361,7 +434,10 @@ func FindOne(ctx context.Context, id int64) (*model.User, error) {
 
 func FindList(ctx context.Context, ids []int64) ([]*model.User, error) {
     var users []*model.User
-    err := db.GetSqlx().Find(ctx, &users, "SELECT * FROM users WHERE id IN (?)", ids)
+    // 使用 gendry 构建 IN 查询
+    where := map[string]interface{}{"id": ids}
+    cond, vals, _ := builder.BuildSelect("users", where, []string{"*"})
+    err := db.GetSqlx().Find(ctx, &users, cond, vals...)
     return users, err
 }
 
@@ -459,12 +535,14 @@ type Info struct {
     HandlerType HandlerType
     UserID      int64
     Data        interface{}
+    ctx         context.Context
 }
 
-// 消息类型（实现 msgbus.IMsgbusMessage 接口）
-func (i *Info) MsgbusTopic() string {
-    return "handler.event"
-}
+// 注意: msgbus.Publish 的第三个参数为 interface{}，无需实现 IMsgbusMessage 接口
+// 这里实现 IMsgbusMessage 是为了订阅者能通过 msg.Msg() 获取类型断言后的原始消息
+func (i *Info) Ctx() context.Context   { return i.ctx }
+func (i *Info) Topic() string          { return "handler.event" }
+func (i *Info) Msg() interface{}        { return i }
 
 var handlers = map[HandlerType][]func(ctx context.Context, info *Info) error{}
 
@@ -476,6 +554,7 @@ func AddHandler(ht HandlerType, fn func(ctx context.Context, info *Info) error) 
 // 触发事件（异步执行所有注册的 handler）
 func Trigger(ctx context.Context, ht HandlerType, info *Info) {
     info.HandlerType = ht
+    info.ctx = ctx
     fns, ok := handlers[ht]
     if !ok { return }
 
@@ -586,7 +665,7 @@ ENTRYPOINT ["./server"]
 
 1. 在 `configs/default.yaml` 添加 `components.sqlx.default` 配置
 2. 在 `client/db/db.go` 添加 `GetSqlx()` 方法
-3. 代码中使用 `sqlx.GetClient("default")` 获取客户端
+3. 代码中使用 `sqlx.GetCreator().GetClient("default")` 获取客户端
 
 ### 只加 Cron 定时任务
 
@@ -597,7 +676,7 @@ ENTRYPOINT ["./server"]
 ### 只加 Cache 缓存
 
 1. 在 `configs/default.yaml` 添加 `components.cache.default` 配置
-2. 代码中使用 `cache.GetDefCache().Get/Set/Del`
+2. 代码中使用 `cache.GetCacheCreator().GetDefCache().Get/Set/Del`
 
 ### 只加 gRPC 服务
 
@@ -629,12 +708,12 @@ ENTRYPOINT ["./server"]
 3. 在 `configs/default.yaml` 添加 `plugins.metrics` 配置
 4. 代码中使用 `metrics.Counter/Gauge/Histogram/Summary`
 
-### 只加 redis_tool 分布式锁
+### 只加 redis_tool 分布式锁与原子操作
 
 1. 确保已配置 Redis 组件
 2. 在 `main.go` 的 `uapp.NewApp()` **之前**调用 `redis_tool.SetManualInit()`
 3. 在配置加载完成后调用 `redis_tool.RedisClientName = "default"; redis_tool.ManualInit()`
-4. 代码中使用 `redis_tool.AutoLock()` 或 `redis_tool.Lock()`
+4. 代码中使用 `redis_tool.AutoLock()`/`redis_tool.Lock()` 或 `redis_tool.CompareAndSwap()`/`redis_tool.CompareAndDel()`/`redis_tool.CompareAndExpire()`
 
 ---
 
@@ -654,16 +733,41 @@ app := uapp.NewApp("my-api",
 ### 组合2: 数据处理服务 (gpool + Redis + LoopLoad + Cron)
 
 ```go
+import (
+    "time"
+    "github.com/zly-app/service/cron"
+    "github.com/zly-app/utils/loopload"
+)
+
+// LoopLoad 在代码中创建，自动随 zapp 生命周期启停
+var dataLoader = loopload.New[map[string]string]("data-loader",
+    func(ctx context.Context) (map[string]string, error) {
+        return loadDataFromDB(ctx)
+    },
+    loopload.WithReloadTime(5*time.Minute),
+)
+
 app := uapp.NewApp("my-processor",
     cron.WithService(),
 )
 ```
 
-配置需要: `components.redis`, `components.gpool`, `services.cron`
+配置需要: `components.redis`, `components.sqlx`, `components.gpool`, `services.cron`
 
 ### 组合3: 事件驱动服务 (MsgBus + gpool + Cache)
 
 ```go
+import (
+    "github.com/zly-app/zapp/component/msgbus"
+    "github.com/zly-app/zapp/component/gpool"
+)
+
+// MsgBus 和 gpool 均为内置组件，无需 WithService 选项
+// 订阅事件 (在 init 或业务初始化时)
+msgbus.Subscribe("order.created", 2, func(ctx context.Context, msg msgbus.IMsgbusMessage) {
+    // 处理事件
+})
+
 app := uapp.NewApp("my-event-service")
 ```
 
@@ -672,6 +776,11 @@ app := uapp.NewApp("my-event-service")
 ### 组合4: 完整可观测性服务 (gRPC + Metrics + Trace)
 
 ```go
+import (
+    "github.com/zly-app/grpc"
+    "github.com/zly-app/plugin/prometheus"
+)
+
 app := uapp.NewApp("my-service",
     grpc.WithService(),
     grpc.WithGatewayService(),

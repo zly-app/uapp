@@ -17,7 +17,7 @@ components:
   gpool:
     default:
       jobQueueSize: 100000      # 任务队列大小 (最小100000)
-      threadCount: 0            # worker 数: 正数=固定, 0=CPU*2, 负数=无池模式
+      threadCount: 0            # worker 数: 正数=固定, 0或<100=默认100, 负数=无池模式
 ```
 
 ## 使用方式
@@ -48,8 +48,7 @@ gpool.GetDefGPool().Go(func() error {
 
 ```go
 gpool.GetDefGPool().Go(func() error {
-    // 异步逻辑
-    return result, nil
+    return doSomething()
 }, func(err error) {
     // 完成回调
     if err != nil { log.Error("任务失败", zap.Error(err)) }
@@ -112,21 +111,23 @@ func (s *Server) CreateRecord(ctx context.Context, req *pb.CreateReq) (*pb.Creat
 ### 场景2: 批量并发查询
 
 ```go
-var wg sync.WaitGroup
+// 使用 GoAndWait 等待所有任务完成
 var mu sync.Mutex
 results := make([]Item, 0, len(ids))
 
-for _, id := range ids {
+fns := make([]func() error, len(ids))
+for i, id := range ids {
     id := id
-    gpool.GetDefGPool().Go(func() error {
+    fns[i] = func() error {
         item, err := loadItem(ctx, id)
         if err != nil { return err }
         mu.Lock()
         results = append(results, item)
         mu.Unlock()
         return nil
-    }, nil)
+    }
 }
+err := gpool.GetDefGPool().GoAndWait(fns...)
 ```
 
 ## 注意事项

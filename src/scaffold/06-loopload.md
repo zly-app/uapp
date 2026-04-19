@@ -34,8 +34,8 @@ func init() {
 ### 2. 读取数据
 
 ```go
-// 获取当前加载的数据（原子读取，并发安全）
-users := userLoader.Get()
+// 获取当前加载的数据（需要传入 ctx，并发安全）
+users := userLoader.Get(ctx)
 if user, ok := users[userID]; ok {
     // 使用 user
 }
@@ -72,7 +72,7 @@ func init() {
 }
 
 // 使用
-cfg := appConfig.Get()
+cfg := appConfig.Get(ctx)
 ```
 
 ### 场景2: 数据预加载
@@ -89,8 +89,8 @@ func init() {
     )
 }
 
-func Translate(code string) string {
-    dict := dictLoader.Get()
+func Translate(ctx context.Context, code string) string {
+    dict := dictLoader.Get(ctx)
     return dict[code]
 }
 ```

@@ -10,7 +10,7 @@
 |------|------|----------|------|
 | 对外提供 API 网关 + 内部 gRPC 调用 | grpc | `github.com/zly-app/grpc` | [01-grpc.md](01-grpc.md) |
 | Redis 客户端 | redis | `github.com/zly-app/component/redis` | [02-redis.md](02-redis.md) |
-| Redis 分布式锁/续期/授权码验证 | redis_tool | `github.com/zlyuancn/redis_tool` | [02-redis.md](02-redis.md) |
+| Redis 分布式锁/续期/授权码验证/CAS原子操作 | redis_tool | `github.com/zlyuancn/redis_tool` | [02-redis.md](02-redis.md) |
 | 调用外部 HTTP 服务 | http | `github.com/zly-app/component/http` | [03-http.md](03-http.md) |
 | MySQL/PostgreSQL 等 SQL 数据库 | sqlx | `github.com/zly-app/component/sqlx` | [04-sqlx.md](04-sqlx.md) |
 | 本地缓存/多级缓存(进程内+Redis) | cache | `github.com/zly-app/cache/v2` | [05-cache.md](05-cache.md) |
@@ -33,7 +33,7 @@
 | HTTP API / RESTful / 网关 | grpc (grpc-gateway) |
 | gRPC / protobuf / RPC | grpc |
 | Redis / 缓存 / KV | redis + cache |
-| 分布式锁 / 互斥 / 续期 | redis_tool |
+| 分布式锁 / 互斥 / 续期 / CAS / 原子交换 / 条件删除 | redis_tool |
 | MySQL / PostgreSQL / SQL / 数据库 | sqlx |
 | HTTP 客户端 / 调用外部服务 / 下载 | http |
 | 本地缓存 / 进程内缓存 / 多级缓存 | cache |
@@ -49,7 +49,7 @@
 | 并发等待 / GoAndWait | zapp/pkg/utils.Go |
 | Recover / Panic 捕获 | zapp/pkg/utils.Recover |
 | Context 克隆 | zapp/pkg/utils.Ctx |
-| 链路追踪 / Trace / Span | zapp/pkg/utils.Trace + otlp 插件 |
+| 链路追踪 / Trace / Span | zapp/pkg/utils.Trace + otlp 插件（CtxStart 返回 ctx+span） |
 | 原子值 / AtomicValue | zutils |
 | 三元 / 默认值 | zapp/pkg/utils.Ternary |
 | 通配符匹配 | zapp/pkg/utils.Text |
@@ -66,7 +66,7 @@
 - **gpool** — 并发处理
 - **cron** — 定时调度
 - **loopload** — 周期加载配置/数据
-- **redis_tool** — 分布式锁防并发
+- **redis_tool** — 分布式锁防并发、CAS原子操作
 
 ### 场景: 缓存服务
 - **cache** — 多级缓存 (进程内 + Redis)
@@ -159,12 +159,28 @@ app.Exit() 或收到退出信号
 | 钩子 | 说明 |
 |------|------|
 | `BeforeInitialize` | 初始化前 |
+| `BeforeMakeComponent` | 构建组件前 |
+| `AfterMakeComponent` | 构建组件后 |
+| `BeforeMakePlugin` | 构建插件前 |
+| `AfterMakePlugin` | 构建插件后 |
+| `BeforeMakeFilter` | 构建过滤器前 |
+| `AfterMakeFilter` | 构建过滤器后 |
+| `BeforeMakeService` | 构建服务前 |
+| `AfterMakeService` | 构建服务后 |
 | `AfterInitialize` | 初始化后 |
 | `BeforeStart` | 启动前 |
+| `BeforeStartPlugin` | 启动插件前 |
+| `AfterStartPlugin` | 启动插件后 |
+| `BeforeStartService` | 启动服务前 |
+| `AfterStartService` | 启动服务后 |
 | `AfterStart` | 启动后 |
+| `BeforeExit` | 退出前 |
 | `BeforeCloseService` | 关闭服务前 |
 | `AfterCloseService` | 关闭服务后 |
+| `BeforeCloseFilter` | 关闭过滤器前 |
+| `AfterCloseFilter` | 关闭过滤器后 |
 | `BeforeClosePlugin` | 关闭插件前 |
 | `AfterClosePlugin` | 关闭插件后 |
-| `BeforeExit` | 退出前 |
+| `BeforeCloseComponent` | 关闭组件前 |
+| `AfterCloseComponent` | 关闭组件后 |
 | `AfterExit` | 退出后 |

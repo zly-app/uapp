@@ -86,7 +86,6 @@ import (
     "github.com/zly-app/zapp"
     "github.com/zly-app/zapp/core"
     zappHandler "github.com/zly-app/zapp/handler"
-    "my-project/client/db"
     "my-project/conf"
 )
 
@@ -177,8 +176,8 @@ waitFn := utils.Go.GoRetWait(fn1, fn2)
 // ... 做其他事 ...
 err := waitFn()  // 等待结果
 
-// 泛型并发查询
-results, err := utils.Go.GoQuery[int64, *User](userIDs, func(id int64) (*User, error) {
+// 泛型并发查询（包级函数）
+results, err := utils.GoQuery[int64, *User](userIDs, func(id int64) (*User, error) {
     return loadUser(ctx, id)
 }, true)  // true=忽略错误项
 ```
@@ -234,20 +233,23 @@ utils.Text.IsMatchWildcardAny("hello.go", "a*", "h*")  // true
 ### Trace — OpenTelemetry 链路追踪
 
 ```go
-// 创建 span
-span := utils.Trace.StartSpan(ctx, "my-operation",
+// 创建 span（返回 ctx + span，需同时接收）
+ctx, span := utils.Trace.StartSpan(ctx, "my-operation",
     utils.Trace.AttrKey("key").String("value"),
 )
 defer utils.Trace.EndSpan(span)
 
-// 简写
-ctx, span := utils.Trace.CtxStart(ctx, "my-operation")
+// 简写：CtxStart 只返回 ctx（不返回 span），CtxEnd 从 ctx 取出 span 并结束
+ctx = utils.Trace.CtxStart(ctx, "my-operation")
 defer utils.Trace.CtxEnd(ctx)
+
+// 从 ctx 中获取 span
+span := utils.Trace.GetSpan(ctx)
 
 // 标记错误
 utils.Trace.MarkSpanAnError(span, err)
 
-// 获取 TraceID
+// 获取 TraceID 和 SpanID（返回两个值）
 traceID, spanID := utils.Trace.GetOTELTraceID(ctx)
 ```
 
@@ -289,5 +291,6 @@ err := zutils.Recover.WrapCall(func() error {
 ### Time — 时间解析
 
 ```go
-t, err := zutils.Time(time.Local).TextToTimeOfLayout("2024-01-01 00:00:00", zutils.T.Layout)
+// 解析时间字符串
+t, err := zutils.NewTimeParse(time.Local).TextToTimeOfLayout("2024-01-01 00:00:00", zutils.T.Layout)
 ```

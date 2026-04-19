@@ -103,7 +103,7 @@ app.Run()
 | HTTP API / RESTful / 网关 | grpc (grpc-gateway) | [01-grpc.md](src/scaffold/01-grpc.md) |
 | gRPC / protobuf / RPC | grpc | [01-grpc.md](src/scaffold/01-grpc.md) |
 | Redis / KV 存储 | redis | [02-redis.md](src/scaffold/02-redis.md) |
-| 分布式锁 / 互斥 / 续期 | redis_tool | [02-redis.md](src/scaffold/02-redis.md) |
+| 分布式锁 / 互斥 / 续期 / CAS / 原子交换 / 条件删除 | redis_tool | [02-redis.md](src/scaffold/02-redis.md) |
 | 调用外部HTTP / HTTP客户端 | http | [03-http.md](src/scaffold/03-http.md) |
 | MySQL / PostgreSQL / SQL数据库 | sqlx | [04-sqlx.md](src/scaffold/04-sqlx.md) |
 | 本地缓存 / 多级缓存 | cache | [05-cache.md](src/scaffold/05-cache.md) |
