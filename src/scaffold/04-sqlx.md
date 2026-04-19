@@ -30,14 +30,18 @@ components:
 ```go
 import "github.com/zly-app/component/sqlx"
 
-// 获取默认客户端（通过 Creator 接口）
-client := sqlx.GetCreator().GetDefClient()
+// 获取默认客户端（包级便捷函数）
+client := sqlx.GetDefClient()
 
-// 获取命名客户端
+// 获取命名客户端（包级便捷函数）
+client := sqlx.GetClient("my-db")
+
+// 通过 Creator 接口获取（等价于上面的包级函数）
+client := sqlx.GetCreator().GetDefClient()
 client := sqlx.GetCreator().GetClient("my-db")
 ```
 
-> **注意**: `sqlx.GetDefClient()` 和 `sqlx.GetClient()` 不是包级函数，需通过 `sqlx.GetCreator()` 获取 Creator 接口后调用。
+> **提示**: `sqlx.GetDefClient()` / `sqlx.GetClient(name)` 是包级便捷函数，可直接调用，无需先获取 Creator。
 
 ### 2. 查询
 
@@ -105,7 +109,15 @@ err := sqlx.GetCreator().GetDefClient().Transaction(ctx, fn,
 
 > **注意**: `sqlx.Tx` 接口没有 `FindOne` 方法（仅有 `Exec`、`Query`、`FindColumn`、`FindToStructs`）；如需在事务中使用 `FindOne`，请使用 `TransactionX` 获取 `sqlx.Txx` 接口。
 
-### 6. 动态 SQL 构建
+### 6. Unsafe 模式
+
+```go
+// 获取 Unsafe 客户端（允许将未映射的列忽略，而非报错）
+unsafeClient := client.Unsafe()
+err := unsafeClient.FindOne(ctx, &user, "SELECT * FROM users WHERE id = ?", id)
+```
+
+### 7. 动态 SQL 构建
 
 推荐使用 `github.com/didi/gendry/builder`:
 

@@ -35,10 +35,14 @@ app.Run()
 
 + [x] [apollo_provider](https://github.com/zly-app/zapp/tree/master/plugin/apollo_provider) 
   `apollo配置观察提供者`只有在`应用配置`存在`apollo`时才会开启.
-+ [x] [zipkinotel](https://github.com/zly-app/plugin/tree/master/zipkinotel) 链路上报
-+ [x] [honey](https://github.com/zly-app/plugin/tree/master/honey) 日志收集
-+ [x] [pprof](https://github.com/zly-app/plugin/tree/master/pprof) 性能分析工具
-+ [x] [prometheus](https://github.com/zly-app/plugin/tree/master/prometheus) Metrics 上报到 prometheus
++ [x] [pprof](https://github.com/zly-app/plugin/tree/master/pprof) 性能分析工具（默认启用）
++ [x] [otlp](https://github.com/zly-app/plugin/tree/master/otlp) OTLP 链路追踪+指标上报（默认启用）
+
+以下插件需手动启用：
+
++ [ ] [zipkinotel](https://github.com/zly-app/plugin/tree/master/zipkinotel) Zipkin 链路追踪（OpenTelemetry）
++ [ ] [honey](https://github.com/zly-app/plugin/tree/master/honey) 日志收集
++ [ ] [prometheus](https://github.com/zly-app/plugin/tree/master/prometheus) Metrics 上报到 prometheus
 
 # 配置说明
 
@@ -90,7 +94,7 @@ app.Run()
 
 环境配置完成后就可以启动程序了. 当然, 可以使用命令行来覆盖环境变量的值. 如 `myapp -ApolloAddress="http://localhost:8080"`
 
-程序启动时 `upp` 读取`${ApolloUAppID}`对应的apollo配置作为 `uapp配置`. 然后读取`${ApolloAppId}`对应的apollo配置作为`应用配置`, 如果有重复配置则 `应用配置`会覆盖掉 `uapp配置`. 相当于 `uapp` 的配置作为一个基础配置数据, 而`应用配置`能做个性化的变更.
+程序启动时 `uapp` 读取`${ApolloUAppID}`对应的apollo配置作为 `uapp配置`. 然后读取`${ApolloAppId}`对应的apollo配置作为`应用配置`, 如果有重复配置则 `应用配置`会覆盖掉 `uapp配置`. 相当于 `uapp` 的配置作为一个基础配置数据, 而`应用配置`能做个性化的变更.
 
 如果 `${ApolloDisableApolloApp}` 为 `true`, 则从默认配置文件加载`应用配置`.
 

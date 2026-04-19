@@ -62,6 +62,7 @@ import (
     "github.com/zly-app/uapp"
     "github.com/zlyuancn/redis_tool"
     "github.com/zly-app/zapp/config"
+    "go.uber.org/zap"
     pb "my-project/pb"
     "my-project/conf"
     "my-project/logic"
@@ -83,7 +84,7 @@ func main() {
 
     // 初始化业务配置
     if err := conf.Init(); err != nil {
-        log.Fatal("初始化配置失败", zap.Error(err))
+        zap.L().Fatal("初始化配置失败", zap.Error(err))
     }
 
     // 手动初始化 redis_tool
@@ -111,6 +112,7 @@ import (
     "github.com/zly-app/uapp"
     "github.com/zly-app/zapp/config"
     "github.com/zlyuancn/redis_tool"
+    "go.uber.org/zap"
     "my-project/conf"
     "my-project/handler"
     "my-project/client/db"
@@ -126,7 +128,7 @@ func main() {
     defer app.Exit()
 
     if err := conf.Init(); err != nil {
-        log.Fatal("初始化配置失败", zap.Error(err))
+        zap.L().Fatal("初始化配置失败", zap.Error(err))
     }
 
     redis_tool.RedisClientName = conf.Conf.RedisName
@@ -155,6 +157,7 @@ import (
     "github.com/zly-app/zapp/config"
     "github.com/zly-app/zapp/pkg/utils"
     "github.com/zlyuancn/redis_tool"
+    "go.uber.org/zap"
     "my-project/conf"
     "my-project/client/db"
 )
@@ -207,7 +210,7 @@ func main() {
     defer app.Exit()
 
     if err := conf.Init(); err != nil {
-        log.Fatal("初始化配置失败", zap.Error(err))
+        zap.L().Fatal("初始化配置失败", zap.Error(err))
     }
 
     redis_tool.RedisClientName = conf.Conf.RedisName
@@ -416,6 +419,8 @@ func GetSqlx() sqlx.Client {
 
 ### dao/example/dao.go
 
+> **注意**: `gendry` (`github.com/didi/gendry`) 是可选的动态 SQL 构建工具，需单独添加依赖。如不需要可替换为手写 SQL。
+
 ```go
 package user
 
@@ -463,6 +468,7 @@ import (
     "github.com/zly-app/zapp/pkg/utils"
     pb "my-project/pb"
     "my-project/dao/user"
+    "my-project/model"
     "my-project/client/db"
 )
 

@@ -51,7 +51,7 @@ func initConfig() {
 	cl.ApolloUAppID = flag.String(ApolloUAppID, utils.Ternary.Or(os.Getenv(ApolloUAppID), "uapp").(string), "uapp 应用名")
 	cl.ApolloAppId = flag.String(ApolloAppId, os.Getenv(ApolloAppId), "当前应用名, 应用要覆盖 uapp 的配置")
 	cl.ApolloDisableApolloUApp = flag.Bool(ApolloDisableApolloUApp, cast.ToBool(os.Getenv(ApolloDisableApolloUApp)), "uapp不从apollo中获取uapp配置, 不会影响`应用配置`的获取")
-	cl.ApolloDisableApolloApp = flag.Bool(ApolloDisableApolloApp, cast.ToBool(os.Getenv(ApolloAlwaysLoadFromRemote)), "uapp不从apollo中获取`应用配置`")
+	cl.ApolloDisableApolloApp = flag.Bool(ApolloDisableApolloApp, cast.ToBool(os.Getenv(ApolloDisableApolloApp)), "uapp不从apollo中获取`应用配置`")
 	cl.ApolloAccessKey = flag.String(ApolloAccessKey, os.Getenv(ApolloAccessKey), "验证key, 优先级高于基础认证")
 	cl.ApolloAuthBasicUser = flag.String(ApolloAuthBasicUser, os.Getenv(ApolloAuthBasicUser), "基础认证用户名, 可用于nginx的基础认证扩展")
 	cl.ApolloAuthBasicPassword = flag.String(ApolloAuthBasicPassword, os.Getenv(ApolloAuthBasicPassword), "基础认证密码")

@@ -99,7 +99,7 @@ uapp 默认启用的插件：
 | otlp | uapp 默认启用 | OTLP 协议 Trace + Metrics 上报 |
 | pprof | uapp 默认启用 | Go pprof 性能分析端点 |
 | prometheus | `prometheus.WithPlugin()` | Prometheus 指标采集/Remote Write |
-| zipkin | `zipkin.WithPlugin()` | Zipkin 链路追踪 |
+| zipkinotel | `zipkinotel.WithPlugin()` | Zipkin 链路追踪（OpenTelemetry） |
 | jaegerotel | `jaegerotel.WithPlugin()` | Jaeger OpenTelemetry 链路追踪 |
 | honey | `honey.WithPlugin()` | 日志采集/旋转(支持 loki/http/std) |
 | apollo_provider | uapp 自动启用 | Apollo 配置观察提供者(有 apollo 配置时自动开启) |
@@ -153,6 +153,8 @@ app.Exit() 或收到退出信号
   ├── 关闭插件 (逆序)
   └── 释放组件
 ```
+
+> **不启用默认插件**: 如果不需要 pprof 和 otlp 插件，可以使用 `uapp.NewAppNotPlugins(name, opts...)` 替代 `uapp.NewApp(name, opts...)`，然后按需手动添加插件。
 
 生命周期钩子（通过 `zapp.AddHandler(handlerType, fn)` 注册）：
 

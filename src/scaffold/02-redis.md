@@ -80,7 +80,7 @@ func main() {
 
 ## redis_tool — Redis 分布式锁与原子操作
 
-> 导入: `github.com/zlyuancn/redis_tool`
+> 导入: `github.com/zlyuancn/redis_tool`（外部依赖，需 `go get github.com/zlyuancn/redis_tool`）
 
 ### 功能概览
 
