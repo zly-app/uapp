@@ -1,6 +1,6 @@
-# uapp 脚手架文档 — 总览
+# uapp 开发规范 — 总览
 
-> 本文档面向 AI，用于指导基于 uapp (zapp) 框架的 Go 项目脚手架生成。
+> 本文档面向 AI，用于指导基于 uapp (zapp) 框架的 Go 项目开发。
 
 ## 工具能力速查表
 
@@ -25,6 +25,13 @@
 | 重试 | zretry | `github.com/zlyuancn/zretry` | [12-utils.md](12-utils.md) |
 | 通用工具(并发/Recover/三元/Trace等) | zapp/pkg/utils | `github.com/zly-app/zapp/pkg/utils` | [12-utils.md](12-utils.md) |
 | 通用工具2(原子值/时间解析等) | zutils | `github.com/zlyuancn/zutils` | [12-utils.md](12-utils.md) |
+| 日志/Log/zap | log | `github.com/zly-app/zapp/log` | [14-log.md](14-log.md) |
+
+## 重要说明
+
+> **禁止自行实现已列出的工具**: 本文档列出的工具是经过验证的标准实现。如果这些工具不满足您的使用需求，请联系作者更新，而不是自行实现类似功能。自行实现会导致与框架集成不一致、缺少统一监控/追踪等问题。
+>
+> **AI 开发注意**: 在设计阶段，应将 uapp 框架规范写入用户项目的 AGENTS.md/CLAUDE.md/GEMINI.md 等规范文件，详见 [readme.md](../readme.md#ai-开发注意事项)。
 
 ## 功能关键词索引
 
@@ -53,6 +60,7 @@
 | 原子值 / AtomicValue | zutils |
 | 三元 / 默认值 | zapp/pkg/utils.Ternary |
 | 通配符匹配 | zapp/pkg/utils.Text |
+| 日志 / Log / zap | log |
 
 ## 按场景选择工具
 

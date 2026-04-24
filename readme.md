@@ -1,13 +1,26 @@
 <!-- TOC -->
 
+- [AI 开发快速指引](#ai-开发快速指引)
 - [开始](#%E5%BC%80%E5%A7%8B)
 - [提供的功能](#%E6%8F%90%E4%BE%9B%E7%9A%84%E5%8A%9F%E8%83%BD)
     - [组件](#%E7%BB%84%E4%BB%B6)
     - [插件](#%E6%8F%92%E4%BB%B6)
-- [配置说明](#%E9%85%8D%E7%BD%AE%E8%AF%B4%E6%98%8E)
+- [配置说明](#%E9%85%8D%E7%BD%AE%E8%AF%4E6%98%8E)
 - [apollo 配置说明](#apollo-%E9%85%8D%E7%BD%AE%E8%AF%B4%E6%98%8E)
+- [开发规范](#%E5%BC%80%E5%8F%91%E8%A7%84%E8%8C%83)
 
 <!-- /TOC -->
+
+---
+
+# AI 开发快速指引
+
+创建新项目时，将以下内容直接发送给 AI：
+
+```
+本项目基于 uapp/zapp 框架开发，请在项目根目录创建 AGENTS.md 文件，内容见:
+https://github.com/zly-app/uapp#ai-开发注意事项
+```
 
 ---
 
@@ -100,27 +113,53 @@ app.Run()
 
 注意. 用户通过代码或参数向`uapp`/`zapp`传入配置加载方式则会完全替换掉`uapp`/`应用配置`.
 
-# 脚手架文档
+# 开发规范
 
-| 需求关键词 | 工具 | 文档 |
-|------------|------|------|
-| HTTP API / RESTful / 网关 | grpc (grpc-gateway) | [01-grpc.md](src/scaffold/01-grpc.md) |
-| gRPC / protobuf / RPC | grpc | [01-grpc.md](src/scaffold/01-grpc.md) |
-| Redis / KV 存储 | redis | [02-redis.md](src/scaffold/02-redis.md) |
-| 分布式锁 / 互斥 / 续期 / CAS / 原子交换 / 条件删除 | redis_tool | [02-redis.md](src/scaffold/02-redis.md) |
-| 调用外部HTTP / HTTP客户端 | http | [03-http.md](src/scaffold/03-http.md) |
-| MySQL / PostgreSQL / SQL数据库 | sqlx | [04-sqlx.md](src/scaffold/04-sqlx.md) |
-| 本地缓存 / 多级缓存 | cache | [05-cache.md](src/scaffold/05-cache.md) |
-| 定时加载 / 数据预热 / 配置刷新 | loopload | [06-loopload.md](src/scaffold/06-loopload.md) |
-| 定时任务 / Cron / 周期执行 | cron | [07-cron.md](src/scaffold/07-cron.md) |
-| 协程池 / 并发 / 异步 | gpool | [08-gpool.md](src/scaffold/08-gpool.md) |
-| 消息 / 事件 / 发布订阅 | msgbus | [09-msgbus.md](src/scaffold/09-msgbus.md) |
-| 指标 / 监控 / Counter / Histogram | metrics | [10-metrics.md](src/scaffold/10-metrics.md) |
-| 配置 / 热更新 / Apollo | config | [11-config.md](src/scaffold/11-config.md) |
-| 单飞 / 防击穿 | zsingleflight | [12-utils.md](src/scaffold/12-utils.md) |
-| 批量写入 / 轮转 | rotate | [12-utils.md](src/scaffold/12-utils.md) |
-| 重试 / Retry | zretry | [12-utils.md](src/scaffold/12-utils.md) |
-| 并发等待 / Recover / Context克隆 | zapp/pkg/utils | [12-utils.md](src/scaffold/12-utils.md) |
-| 原子值 / 时间解析 | zutils | [12-utils.md](src/scaffold/12-utils.md) |
+> **重要**: 文档中列出的工具是经过验证的标准实现。如果这些工具不满足使用需求，请联系作者更新，**禁止自行实现**类似功能。
 
-场景组合/插件/设计模式 → [总览](src/scaffold/00-overview.md) ｜ 项目结构模板 → [项目结构与集成指南](src/scaffold/13-project-structure.md)
+## AI 开发注意事项
+
+以下为 AGENTS.md 文件的完整内容，AI 应将其写入用户项目根目录：
+
+```markdown
+## uapp 框架规范
+
+本项目基于 uapp/zapp 框架开发，所有组件/工具应使用框架提供的标准实现。
+
+### 工具能力速查表
+
+| 需求 | 工具 | 导入路径 | 详见 |
+|------|------|----------|------|
+| 对外提供 API 网关 + 内部 gRPC 调用 | grpc | github.com/zly-app/grpc | https://github.com/zly-app/uapp/blob/master/src/scaffold/01-grpc.md |
+| Redis 客户端 | redis | github.com/zly-app/component/redis | https://github.com/zly-app/uapp/blob/master/src/scaffold/02-redis.md |
+| Redis 分布式锁/续期/CAS原子操作 | redis_tool | github.com/zlyuancn/redis_tool | https://github.com/zly-app/uapp/blob/master/src/scaffold/02-redis.md |
+| 调用外部 HTTP 服务 | http | github.com/zly-app/component/http | https://github.com/zly-app/uapp/blob/master/src/scaffold/03-http.md |
+| MySQL/PostgreSQL 等 SQL 数据库 | sqlx | github.com/zly-app/component/sqlx | https://github.com/zly-app/uapp/blob/master/src/scaffold/04-sqlx.md |
+| 本地缓存/多级缓存(进程内+Redis) | cache | github.com/zly-app/cache/v2 | https://github.com/zly-app/uapp/blob/master/src/scaffold/05-cache.md |
+| 周期加载/定时从数据源刷新数据 | loopload | github.com/zly-app/utils/loopload | https://github.com/zly-app/uapp/blob/master/src/scaffold/06-loopload.md |
+| 定时任务(Cron) | cron | github.com/zly-app/service/cron | https://github.com/zly-app/uapp/blob/master/src/scaffold/07-cron.md |
+| 协程池 | gpool | github.com/zly-app/zapp/component/gpool | https://github.com/zly-app/uapp/blob/master/src/scaffold/08-gpool.md |
+| 进程内消息通知(发布-订阅) | msgbus | github.com/zly-app/zapp/component/msgbus | https://github.com/zly-app/uapp/blob/master/src/scaffold/09-msgbus.md |
+| 指标收集(Counter/Gauge/Histogram) | metrics | github.com/zly-app/zapp/component/metrics | https://github.com/zly-app/uapp/blob/master/src/scaffold/10-metrics.md |
+| 配置文件/配置变更监听 | config | github.com/zly-app/zapp/config | https://github.com/zly-app/uapp/blob/master/src/scaffold/11-config.md |
+| 单飞(防缓存击穿) | zsingleflight | github.com/zlyuancn/zsingleflight | https://github.com/zly-app/uapp/blob/master/src/scaffold/12-utils.md |
+| 批次轮转(批量写入/轮转刷新) | rotate | github.com/zlyuancn/rotate | https://github.com/zly-app/uapp/blob/master/src/scaffold/12-utils.md |
+| 重试 | zretry | github.com/zlyuancn/zretry | https://github.com/zly-app/uapp/blob/master/src/scaffold/12-utils.md |
+| 通用工具(并发/Recover/三元/Trace等) | zapp/pkg/utils | github.com/zly-app/zapp/pkg/utils | https://github.com/zly-app/uapp/blob/master/src/scaffold/12-utils.md |
+| 通用工具2(原子值/时间解析等) | zutils | github.com/zlyuancn/zutils | https://github.com/zly-app/uapp/blob/master/src/scaffold/12-utils.md |
+| 日志 | log | github.com/zly-app/zapp/log | https://github.com/zly-app/uapp/blob/master/src/scaffold/14-log.md |
+
+### 禁止事项
+
+- 禁止自行实现上述已列出的工具（日志、缓存、数据库连接池、分布式锁等）
+- 禁止使用标准库 log 包（应使用 github.com/zly-app/zapp/log）
+- 禁止直接使用 zap.NewProduction() 等自行创建 logger
+- 禁止自行实现日志轮转、日志采集等功能
+- 禁止使用未在本规范中列出的第三方库替代标准工具
+
+如现有工具不满足需求，应联系框架维护者更新，而非自行实现。
+```
+
+## 工具索引
+
+详细说明、完整工具列表、关键词索引、场景指南 → **[开发规范总览](src/scaffold/00-overview.md)**
