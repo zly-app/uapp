@@ -149,6 +149,10 @@ app.Run()
 | 通用工具2(原子值/时间解析等) | zutils | github.com/zlyuancn/zutils | https://github.com/zly-app/uapp/blob/master/src/scaffold/12-utils.md |
 | 日志 | log | github.com/zly-app/zapp/log | https://github.com/zly-app/uapp/blob/master/src/scaffold/14-log.md |
 
+### 项目结构与集成指南
+
+详见: https://github.com/zly-app/uapp/blob/master/src/scaffold/13-project-structure.md
+
 ### 禁止事项
 
 - 禁止自行实现上述已列出的工具（日志、缓存、数据库连接池、分布式锁等）
