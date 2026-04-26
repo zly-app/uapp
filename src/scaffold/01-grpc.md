@@ -53,6 +53,142 @@ components:
       idleTimeout: 3600              # 闲置超时(秒)
 ```
 
+## 编译 Proto 文件
+
+> **注意**: 本项目使用 `protoc` + Go 插件的方式编译 proto 文件，**不要使用 buf 等其他工具**。buf 等工具的配置和导入路径与本项目不一致，可能导致生成的代码无法正常工作。
+
+### 1. 安装 protoc 编译器
+
+从 https://github.com/protocolbuffers/protobuf/releases 下载 protoc 编译器，解压 protoc 执行文件到 `${GOPATH}/bin/`
+
+### 2. 安装 Go 插件
+
+```shell
+# 消息类型代码生成
+go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
+
+# gRPC 服务代码生成
+go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
+
+# HTTP 网关代码生成
+go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-grpc-gateway@latest
+
+# Swagger 文档生成
+go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2@latest
+
+# 数据校验代码生成
+go install github.com/envoyproxy/protoc-gen-validate@latest
+```
+
+### 3. 获取依赖 proto 文件
+
+本项目的 proto 文件依赖 `grpc/protos` 中的公共定义（如 `google/api/annotations.proto`、`validate/validate.proto`），需将其克隆到本地：
+
+**Linux / macOS:**
+
+```bash
+mkdir -p ${GOPATH}/protos/zly-app && cd ${GOPATH}/protos/zly-app
+git clone --depth=1 https://github.com/zly-app/grpc.git
+```
+
+**Windows CMD:**
+
+```shell
+if not exist %GOPATH%\protos\zly-app mkdir %GOPATH%\protos\zly-app
+cd /d %GOPATH%\protos\zly-app
+git clone --depth=1 https://github.com/zly-app/grpc.git
+```
+
+**Windows PowerShell:**
+
+```powershell
+New-Item -ItemType Directory -Force -Path "$env:GOPATH\protos\zly-app" | Out-Null
+cd "$env:GOPATH\protos\zly-app"
+git clone --depth=1 https://github.com/zly-app/grpc.git
+```
+
+> **GoLand 用户**: 在 `设置` → `语言和框架` → `Protocol Buffers/协议缓冲区` → `Import Paths`，取消勾选 `Configure automatically/自动配置`，将 `${GOPATH}/protos/zly-app/grpc/protos` 添加到 IDE 的 proto 导入路径。
+
+### 4. 编译命令
+
+#### 仅基础编译（消息 + gRPC 服务）
+
+**Linux:**
+
+```bash
+protoc \
+--go_out . --go_opt paths=source_relative \
+--go-grpc_out . --go-grpc_opt paths=source_relative \
+pb/hello/hello.proto
+```
+
+**Windows PowerShell:**
+
+```powershell
+protoc `
+--go_out . --go_opt paths=source_relative `
+--go-grpc_out . --go-grpc_opt paths=source_relative `
+pb/hello/hello.proto
+```
+
+生成文件：
+- `hello.pb.go` — 消息类型代码
+- `hello_grpc.pb.go` — gRPC 服务代码
+
+#### 带 HTTP 网关 + 数据校验 + Swagger
+
+**Linux:**
+
+```bash
+protoc \
+-I . \
+-I ${GOPATH}/protos/zly-app/grpc/protos \
+--go_out . --go_opt paths=source_relative \
+--go-grpc_out . --go-grpc_opt paths=source_relative \
+--grpc-gateway_out . --grpc-gateway_opt paths=source_relative \
+--validate_out "lang=go:." --validate_opt paths=source_relative \
+--openapiv2_out . \
+pb/hello/hello.proto
+```
+
+**Windows PowerShell:**
+
+```powershell
+protoc `
+-I . `
+-I $env:GOPATH/protos/zly-app/grpc/protos `
+--go_out . --go_opt paths=source_relative `
+--go-grpc_out . --go-grpc_opt paths=source_relative `
+--grpc-gateway_out . --grpc-gateway_opt paths=source_relative `
+--validate_out "lang=go:." --validate_opt paths=source_relative `
+--openapiv2_out . `
+pb/hello/hello.proto
+```
+
+生成文件：
+- `hello.pb.go` — 消息类型代码
+- `hello_grpc.pb.go` — gRPC 服务代码
+- `hello.pb.gw.go` — HTTP 网关代码
+- `hello.pb.validate.go` — 数据校验代码
+- `hello.swagger.json` — Swagger 文档
+
+> **提示**: 使用了 `google/api/annotations.proto` 或 `validate/validate.proto` 时，必须通过 `-I` 参数指定依赖 proto 文件的路径。
+
+### 5. Makefile 模板
+
+```makefile
+proto:
+	protoc \
+    -I . \
+    -I ${GOPATH}/protos/zly-app/grpc/protos \
+    --go_out . --go_opt paths=source_relative \
+    --go-grpc_out . --go-grpc_opt paths=source_relative \
+    --grpc-gateway_out . --grpc-gateway_opt paths=source_relative \
+    --validate_out "lang=go:." --validate_opt paths=source_relative \
+    --openapiv2_out . \
+    ./*.proto
+```
+
 ## 使用方式
 
 ### 1. 启用 gRPC 服务 + 网关

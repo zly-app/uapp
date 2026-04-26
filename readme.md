@@ -160,6 +160,7 @@ app.Run()
 - 禁止直接使用 zap.NewProduction() 等自行创建 logger
 - 禁止自行实现日志轮转、日志采集等功能
 - 禁止使用未在本规范中列出的第三方库替代标准工具
+- 禁止使用 buf 等工具编译 proto 文件（应使用 protoc + Go 插件方式，详见 https://github.com/zly-app/uapp/blob/master/src/scaffold/01-grpc.md ）
 
 如现有工具不满足需求，应联系框架维护者更新，而非自行实现。
 ```
