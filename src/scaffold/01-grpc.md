@@ -37,6 +37,47 @@ services:
     bind: ":8080"                    # HTTP网关监听地址
 ```
 
+### 网关响应结构说明
+
+使用 gRPC-Gateway 时，proto 定义的响应结构**不会**直接返回给 HTTP 客户端，而是被 `ForwardResponseRewriter`（位于 `github.com/zly-app/grpc/gateway/response.go`）自动包装为以下结构：
+
+```json
+{
+  "code": 0,
+  "message": "",
+  "data": { /* proto 定义的原始响应结构 */ },
+  "trace_id": "xxx"
+}
+```
+
+| 场景 | `code` | `message` | `data` |
+|------|--------|-----------|--------|
+| 正常响应 | 0 | 空 | proto 定义的完整响应消息 |
+| 错误响应 | gRPC 状态码 | 错误信息 | 空 |
+
+例如，proto 定义的响应：
+
+```protobuf
+message GetUserRsp {
+  string name = 1;
+  int64 age = 2;
+}
+```
+
+HTTP 客户端实际收到的 JSON：
+
+```json
+{
+  "code": 0,
+  "message": "",
+  "data": {
+    "name": "Alice",
+    "age": 30
+  },
+  "trace_id": "4bf92f3577b34da6a3ce929d0e0e4736"
+}
+```
+
 ### 客户端配置 (`components.grpc.{name}`)
 
 ```yaml
