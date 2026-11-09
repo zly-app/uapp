@@ -50,7 +50,7 @@ func Resolve(s Source) (*Resolved, error) {
 
 	if s.Apollo != nil && !s.Apollo.DisableAppApollo {
 		vi.Set(consts.ApolloConfigKey, s.Apollo.appZappConfig(s.AppName))
-		return &Resolved{Viper: vi, NeedApolloProvider: true}, nil
+		return &Resolved{Viper: normalize(vi), NeedApolloProvider: true}, nil
 	}
 
 	fileVi, file, err := loadFirstExisting(s.DefaultFiles)
@@ -64,10 +64,24 @@ func Resolve(s Source) (*Resolved, error) {
 	}
 
 	return &Resolved{
-		Viper:              vi,
+		Viper:              normalize(vi),
 		NeedApolloProvider: vi.IsSet(consts.ApolloConfigKey),
 		ConfigFile:         file,
 	}, nil
+}
+
+// normalize 把内部 viper（自定义 KeyDelimiter，用于让 apollo 命名空间 frame.yaml
+// 不被当作层级路径）转成 zapp 可直接使用的 viper（默认 `.` 分隔符）。
+//
+// 不转换的话，zapp 侧 UnmarshalKey("plugins.pprof") 这类点路径会失效，
+// 表现为「配置写了但插件/服务读不到，全部走默认值」。
+func normalize(vi *viper.Viper) *viper.Viper {
+	out := viper.New()
+	if err := out.MergeConfigMap(vi.AllSettings()); err != nil {
+		// AllSettings 已是 map，合并失败只可能是类型异常；保留空 viper 让上层按默认值走。
+		return out
+	}
+	return out
 }
 
 // IsDaemonCommand 判断命令行首个参数是否为守护进程命令。
