@@ -61,8 +61,8 @@ metrics.Summary("response_size_bytes").Observe(1024, metrics.Labels{"method": "G
 ```go
 import "github.com/zly-app/plugin/prometheus"
 
-app := uapp.NewApp("my-service",
-    prometheus.WithPlugin(),  // 启用 Prometheus，自动注入 metrics.Client
+app := uapp.New("my-service",
+    uapp.WithZappOptions(prometheus.WithPlugin()),  // 启用 Prometheus，自动注入 metrics.Client
 )
 ```
 

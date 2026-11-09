@@ -50,10 +50,10 @@ github.com/bgentry/speakeasy v0.1.0/go.mod h1:+zsyZBPWlz7T6j88CTgSN5bM796AkVf0kB
 github.com/bketelsen/crypt v0.0.4/go.mod h1:aI6NrJ0pMGgvZKL1iVgXLnfIFJtfV+bKCoqOes/6LfM=
 github.com/bytedance/gopkg v0.1.3 h1:TPBSwH8RsouGCBcMBktLt1AymVo2TVsBVCY4b6TnZ/M=
 github.com/bytedance/gopkg v0.1.3/go.mod h1:576VvJ+eJgyCzdjS+c4+77QF3p7ubbtiKARP3TxducM=
-github.com/bytedance/sonic v1.14.2 h1:k1twIoe97C1DtYUo+fZQy865IuHia4PR5RPiuGPPIIE=
-github.com/bytedance/sonic v1.14.2/go.mod h1:T80iDELeHiHKSc0C9tubFygiuXoGzrkjKzX2quAx980=
-github.com/bytedance/sonic/loader v0.4.0 h1:olZ7lEqcxtZygCK9EKYKADnpQoYkRQxaeY2NYzevs+o=
-github.com/bytedance/sonic/loader v0.4.0/go.mod h1:AR4NYCk5DdzZizZ5djGqQ92eEhCCcdf5x77udYiSJRo=
+github.com/bytedance/sonic v1.15.5 h1:gKWTBfYCIQpQHZ7LpwGf9Gj3N88ZN0G/GaB3EQhiGXE=
+github.com/bytedance/sonic v1.15.5/go.mod h1:nn7CoK5W+LKbl22XGJrXg6SwzaFAcVs89miqzkqDwOU=
+github.com/bytedance/sonic/loader v0.5.3 h1:ziVGAbXQtLoaot/M6YQxntGkekxz6B/DyuJVwnTbMAA=
+github.com/bytedance/sonic/loader v0.5.3/go.mod h1:AR4NYCk5DdzZizZ5djGqQ92eEhCCcdf5x77udYiSJRo=
 github.com/cenkalti/backoff/v5 v5.0.3 h1:ZN+IMa753KfX5hd8vVaMixjnqRZ3y8CuJKRKj1xcsSM=
 github.com/cenkalti/backoff/v5 v5.0.3/go.mod h1:rkhZdG3JZukswDf7f0cwqPNk4K0sa+F97BxZthm/crw=
 github.com/census-instrumentation/opencensus-proto v0.2.1/go.mod h1:f6KPmirojxKA12rnyqOA5BBL4O983OfeGPqjHWSTneU=
@@ -325,8 +325,8 @@ github.com/zly-app/plugin/otlp v0.0.0-20251201105815-b4c372b9135e h1:dMUVOspYFGV
 github.com/zly-app/plugin/otlp v0.0.0-20251201105815-b4c372b9135e/go.mod h1:PM30ztb4rxLcxl1dcB7WodNxRQgaZs0YXEEQRTULnd0=
 github.com/zly-app/plugin/pprof v0.0.0-20251201105815-b4c372b9135e h1:RB1VUYrKTaCO59yePxd+llmyX4I/zFzB00D9Ocnulv8=
 github.com/zly-app/plugin/pprof v0.0.0-20251201105815-b4c372b9135e/go.mod h1:VoGzG+6ivB+wSi1tK8Q3/+U9VPZeHv4NZj7QdBuyEVo=
-github.com/zly-app/zapp v1.4.3 h1:LkG2VKOPVK15b0igB5HOlIG3QpcgplEg7/O9J6+aAwY=
-github.com/zly-app/zapp v1.4.3/go.mod h1:VrAeA6NbJ6Dz7l1pWRb8EKEyVeek52XTc93Lt82wA+o=
+github.com/zly-app/zapp v1.4.6 h1:kPTiGdFdQ3zSjOhNUFb8zWAAVRRp0HeRghUI1iDpI88=
+github.com/zly-app/zapp v1.4.6/go.mod h1:AZv2BvmhlVaeXhyEg1JlVYlVL3H1sQfqQm2zuFAkvWQ=
 go.etcd.io/etcd/api/v3 v3.5.0/go.mod h1:cbVKeC6lCfl7j/8jBhAK6aIYO9XOjdptoxU/nLQcPvs=
 go.etcd.io/etcd/client/pkg/v3 v3.5.0/go.mod h1:IJHfcCEKxYu1Os13ZdwCwIUTUVGYTSAM3YSwc9/Ac1g=
 go.etcd.io/etcd/client/v2 v2.305.0/go.mod h1:h9puh54ZTgAKtEbut2oe9P4L/oqKCVB6xsXlzd7alYQ=

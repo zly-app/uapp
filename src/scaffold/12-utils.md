@@ -83,6 +83,7 @@ import (
     "context"
     "time"
     "github.com/zlyuancn/rotate"
+    "github.com/zly-app/uapp"
     "github.com/zly-app/zapp"
     "github.com/zly-app/zapp/core"
     zappHandler "github.com/zly-app/zapp/handler"
@@ -108,11 +109,17 @@ func Init() {
         rotate.WithBatchSize(conf.Conf.SysLogBatchSize),
         rotate.WithAutoRotateTime(time.Duration(conf.Conf.SysLogAutoRotateTimeSec)*time.Second),
     )
+}
 
-    // 注册应用退出前轮转
-    zapp.AddHandler(zappHandler.AfterCloseService, func(app core.IApp, handlerType zappHandler.HandlerType) {
-        SysLog.r.Rotate()
-    })
+// 退出前轮转：zapp.WithHandler 是装配选项，在创建应用时传入（不再有包级 AddHandler）。
+func main() {
+    app := uapp.New("my-service",
+        uapp.WithZappOptions(zapp.WithHandler(zappHandler.AfterCloseService, func(app core.IApp, handlerType zappHandler.HandlerType) {
+            SysLog.r.Rotate()
+        })),
+    )
+    defer app.Exit()
+    app.Run()
 }
 
 func (sl *SysLog) Write(level, message string) {

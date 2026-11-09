@@ -12,21 +12,25 @@
 
 ## 配置
 
-### 服务端配置 (`services.grpc`)
+### 服务端配置 (`services.grpc.<serverName>`)
+
+`serverName` 与代码里的 `g.Server("<serverName>")` 一致，同一进程可以声明多个具名 server。
 
 ```yaml
 services:
   grpc:
-    bind: ":3300"                    # 监听地址
-    heartbeatTime: 20                # 心跳秒数
-    reqDataValidate: true            # 请求数据校验
-    sendDetailedErrorInProduction: false  # 生产环境详细错误
-    registryAddress: "static"        # 注册地址
-    publishName: ""                  # 公告名
-    publishAddress: ""               # 公告地址
-    publishWeight: 100               # 公告权重
-    tlsCertFile: ""                  # TLS证书
-    tlsKeyFile: ""                   # TLS密钥
+    my-service:                      # server 名称
+      Bind: ":3300"                  # 监听地址
+      HeartbeatTime: 20              # 心跳秒数（最小 3）
+      ReqDataValidate: true          # 请求数据校验
+      ReqDataValidateAllField: false # 校验所有字段并返回全部错误
+      SendDetailedErrorInProduction: false  # 生产环境返回详细错误
+      RegistryAddress: "static"      # static 或 redis://<组件名>
+      PublishName: ""                # 公告名
+      PublishAddress: ""             # 公告地址
+      PublishWeight: 100             # 公告权重
+      TLSCertFile: ""                # TLS 证书
+      TLSKeyFile: ""                 # TLS 密钥
 ```
 
 ### 网关配置 (`services.grpc-gateway`)
@@ -34,12 +38,14 @@ services:
 ```yaml
 services:
   grpc-gateway:
-    bind: ":8080"                    # HTTP网关监听地址
+    Bind: ":8080"                    # HTTP 网关监听地址
+    CloseWait: 3                     # 退出等待秒数
+    CorsAllowAll: true               # 允许所有跨域
 ```
 
 ### 网关响应结构说明
 
-使用 gRPC-Gateway 时，proto 定义的响应结构**不会**直接返回给 HTTP 客户端，而是被 `ForwardResponseRewriter`（位于 `github.com/zly-app/grpc/gateway/response.go`）自动包装为以下结构：
+使用 gRPC-Gateway 时，proto 定义的响应结构**不会**直接返回给 HTTP 客户端，而是被 `ForwardResponseRewriter`（位于 `github.com/zly-app/grpc/adapter/httpgw/response.go`）自动包装为以下结构：
 
 ```json
 {
@@ -234,12 +240,16 @@ proto:
 
 ### 1. 启用 gRPC 服务 + 网关
 
+grpc 是组合根：先构造实例，再把 `Options()` 经 `uapp.WithZappOptions` 交给 uapp。
+
 ```go
-app := uapp.NewApp("my-service",
-    grpc.WithService(),              // 启用 gRPC 服务
-    grpc.WithGatewayService(),       // 启用 HTTP 网关
-)
+g := grpc.New(grpc.WithServer(), grpc.WithGateway())
+app := uapp.New("my-service", uapp.WithZappOptions(g.Options()...))
+defer app.Exit()
 ```
+
+> **必须传 `g.Options()`**：它带 `AfterInitialize`（装配）与 `BeforeExit`（关闭）两个实例级 handler。
+> 不传会导致 `ClientConn` 返回明确错误、`Mux()` / `GatewayConn()` panic。
 
 ### 2. 定义 Proto
 
@@ -270,63 +280,63 @@ message GetUserRsp {
 ### 3. 注册 gRPC 服务端
 
 ```go
-// 在 main.go 中
-pb.RegisterMyServiceServer(grpc.Server("my-service"), logic.NewServer())
+// 在 main.go 中，app.Run 之前
+pb.RegisterMyServiceServer(g.Server("my-service"), logic.NewServer())
 ```
 
-> **同名服务复用 Server**: 同一个 `serverName` 的多个 gRPC 服务会自动复用同一个 `GRpcServer` 实例（共享监听端口和配置）。
-> 对同一个 `serverName` 多次调用 `grpc.Server()` 会触发 panic，正确的做法是只调用一次 `grpc.Server()` 获取注册器，然后在同一个注册器上注册多个服务。
+> **同名 server 复用注册器**: 同一个 `serverName` 只调用一次 `g.Server(name)`，返回的注册器可注册多个 pb 服务（共享监听端口和配置）。
+> 对同一个 `serverName` 重复调用 `g.Server()` 会 panic。
 >
 > ```go
-> // 正确：获取一次注册器，注册多个服务（自动复用同一个 server）
-> registrar := grpc.Server("my-service")
+> // 正确：获取一次注册器，注册多个服务
+> registrar := g.Server("my-service")
 > pb.RegisterServiceAServer(registrar, implA)
 > pb.RegisterServiceBServer(registrar, implB)
 >
-> // 错误：对同一个 serverName 多次调用 grpc.Server() 会 panic
-> pb.RegisterServiceAServer(grpc.Server("my-service"), implA)
-> pb.RegisterServiceBServer(grpc.Server("my-service"), implB)  // panic!
+> // 错误：对同一个 serverName 重复获取注册器
+> pb.RegisterServiceAServer(g.Server("my-service"), implA)
+> pb.RegisterServiceBServer(g.Server("my-service"), implB)  // panic!
 > ```
 
 ### 4. 注册 gRPC-Gateway
 
 ```go
-// 在 main.go 中
-client := pb.NewMyServiceClient(grpc.GetGatewayClientConn("my-service"))
-_ = pb.RegisterMyServiceHandlerClient(context.Background(), grpc.GetGatewayMux(), client)
+// 在 main.go 中，app.Run 之前
+client := pb.NewMyServiceClient(g.GatewayConn("my-service"))
+_ = pb.RegisterMyServiceHandlerClient(context.Background(), g.Mux(), client)
 ```
 
 ### 5. gRPC 客户端调用
 
 ```go
-// 获取客户端连接
-conn := grpc.GetClientConn("my-service")
+// 获取客户端连接（按需建立）
+conn := g.ClientConn("my-service")
+client := pb.NewMyServiceClient(conn)
 
 // 普通调用
-client := pb.NewMyServiceClient(conn)
 rsp, err := client.GetUser(ctx, &pb.GetUserReq{Id: 1})
 
-// 带哈希键调用(一致性哈希) — WithHashKey/WithTarget 是 grpc.CallOption，在 RPC 调用时传入
-rsp, err := client.GetUser(ctx, &pb.GetUserReq{Id: 1}, grpc.WithHashKey("user-123"))
-
-// 指定目标调用
-rsp, err := client.GetUser(ctx, &pb.GetUserReq{Id: 1}, grpc.WithTarget("10.0.0.1:3300"))
+// 一致性哈希 / 指定目标：仍是 grpc.CallOption，在 RPC 调用时传入
+rsp, err = client.GetUser(ctx, &pb.GetUserReq{Id: 1}, grpc.WithHashKey("user-123"))
+rsp, err = client.GetUser(ctx, &pb.GetUserReq{Id: 1}, grpc.WithTarget("10.0.0.1:3300"))
 ```
 
-### 6. 客户端 Hook
+### 6. 客户端 / 服务端 Hook
+
+Hook 就是 gRPC 原生拦截器：`grpc.ClientHook = grpc.UnaryClientInterceptor`、`grpc.ServerHook = grpc.UnaryServerInterceptor`。
+它们在构造组合根时注册，不再有包级 `init` 注册入口。
 
 ```go
-// 注册指定服务的客户端 Hook (在 init 中)
-// Hook 类型为 grpc.UnaryClientInterceptor
-grpc.RegistryClientHook("my-service", func(ctx context.Context, method string, req, reply interface{}, cc *grpc.ClientConn, invoker grpc.UnaryInvoker, opts ...grpc.CallOption) (context.Context, error) {
-    // 在每次 RPC 调用前/后执行
-    return invoker(ctx, method, req, reply, cc, opts...)
-})
-
-// 给所有 client 添加 hook
-grpc.RegistryAllClientHook(func(ctx context.Context, method string, req, reply interface{}, cc *grpc.ClientConn, invoker grpc.UnaryInvoker, opts ...grpc.CallOption) (context.Context, error) {
-    return invoker(ctx, method, req, reply, cc, opts...)
-})
+g := grpc.New(
+    grpc.WithAllClientHooks(func(ctx context.Context, method string, req, reply interface{}, cc *grpc.ClientConn, invoker grpc.UnaryInvoker, opts ...grpc.CallOption) error {
+        // 在每次 RPC 调用前/后执行
+        return invoker(ctx, method, req, reply, cc, opts...)
+    }),
+    grpc.WithClientHooks("my-service", myHook), // 只作用于指定客户端
+    grpc.WithServerHooks(func(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error) {
+        return handler(ctx, req)
+    }),
+)
 ```
 
 ## 完整 main.go 示例
@@ -344,18 +354,19 @@ import (
 )
 
 func main() {
-    app := uapp.NewApp("my-service",
-        grpc.WithService(),              // 启用 gRPC 服务
-        grpc.WithGatewayService(),       // 启用 HTTP 网关
-    )
+    // 组合根：先构造 grpc 实例
+    g := grpc.New(grpc.WithServer(), grpc.WithGateway())
+
+    // 交给 uapp 装配（配置、默认插件、守护进程都在这里）
+    app := uapp.New("my-service", uapp.WithZappOptions(g.Options()...))
     defer app.Exit()
 
-    // 注册 gRPC 服务实现
-    pb.RegisterMyServiceServer(grpc.Server("my-service"), logic.NewServer())
+    // 注册 gRPC 服务实现（必须在 app.Run 之前）
+    pb.RegisterMyServiceServer(g.Server("my-service"), logic.NewServer())
 
     // 注册 gRPC-Gateway 路由
-    client := pb.NewMyServiceClient(grpc.GetGatewayClientConn("my-service"))
-    _ = pb.RegisterMyServiceHandlerClient(context.Background(), grpc.GetGatewayMux(), client)
+    client := pb.NewMyServiceClient(g.GatewayConn("my-service"))
+    _ = pb.RegisterMyServiceHandlerClient(context.Background(), g.Mux(), client)
 
     app.Run()
 }

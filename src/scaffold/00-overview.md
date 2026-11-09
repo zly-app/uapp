@@ -138,12 +138,12 @@ plugins:
 3. **Filter 链**: 所有 I/O 操作都经过 `filter.GetClientFilter` 链，统一注入 trace、metrics、日志
 4. **Option 函数选项**: 使用 `WithXxx()` 函数选项模式配置行为
 5. **错误占位**: 创建失败时返回 `errClient`/`errCache`/`errConn`，所有方法返回错误，避免 nil panic
-6. **zapp 生命周期**: 通过 `zapp.AddHandler()` 注册初始化/关闭回调
+6. **zapp 生命周期**: 通过 `zapp.WithHandler(handlerType, fn)` 作为装配选项注册初始化/关闭回调
 
 ## 应用生命周期
 
 ```
-NewApp(name, opts...)
+uapp.New(name, opts...)
   ├── 加载配置 (config)
   ├── 初始化 Logger
   ├── 构建组件 (component: gpool + msgbus + 自定义)
@@ -162,9 +162,9 @@ app.Exit() 或收到退出信号
   └── 释放组件
 ```
 
-> **不启用默认插件**: 如果不需要 pprof 和 otlp 插件，可以使用 `uapp.NewAppNotPlugins(name, opts...)` 替代 `uapp.NewApp(name, opts...)`，然后按需手动添加插件。
+> **不启用默认插件**: 如果不需要 pprof 和 otlp 插件，使用 `uapp.New(name, uapp.WithoutDefaultPlugins(), ...)`，然后按需手动添加插件。
 
-生命周期钩子（通过 `zapp.AddHandler(handlerType, fn)` 注册）：
+生命周期钩子（通过 `zapp.WithHandler(handlerType, fn)` 作为装配选项注册）：
 
 | 钩子 | 说明 |
 |------|------|

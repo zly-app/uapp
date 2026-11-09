@@ -38,7 +38,7 @@ my-project/
 
 | 目录 | 职责 | 示例 |
 |------|------|------|
-| `conf/` | 配置结构定义、默认值填充、初始化 | 解析 `config.Conf.Parse()` 结果 |
+| `conf/` | 配置结构定义、默认值填充、初始化 | 用 `app.GetConfig().Parse(key, &conf)` 解析 |
 | `client/db/` | 封装组件获取，对外提供统一接口 | `db.GetRedis()`, `db.GetSqlx()` |
 | `dao/` | 数据访问层，封装 SQL/Redis 操作 | CRUD、批量查询 |
 | `logic/` | gRPC 服务实现，组合 dao/module | 处理 RPC 请求，编排业务流程 |
@@ -75,11 +75,11 @@ func main() {
     // 注册 Apollo 命名空间（如果需要）
     config.RegistryApolloNeedParseNamespace(conf.ConfigKey)
 
-    // 创建应用
-    app := uapp.NewApp("my-service",
-        grpc.WithService(),              // 启用 gRPC 服务
-        grpc.WithGatewayService(),       // 启用 HTTP 网关
-    )
+    // grpc 组合根：启用 gRPC 服务与 HTTP 网关
+    g := grpc.New(grpc.WithServer(), grpc.WithGateway())
+
+    // 创建应用（grpc 的装配选项经 WithZappOptions 传入）
+    app := uapp.New("my-service", uapp.WithZappOptions(g.Options()...))
     defer app.Exit()
 
     // 初始化业务配置
@@ -92,11 +92,11 @@ func main() {
     redis_tool.ManualInit()
 
     // 注册 gRPC 服务端
-    pb.RegisterMyServiceServer(grpc.Server("my-service"), logic.NewServer())
+    pb.RegisterMyServiceServer(g.Server("my-service"), logic.NewServer())
 
     // 注册 gRPC-Gateway
-    client := pb.NewMyServiceClient(grpc.GetGatewayClientConn("my-service"))
-    _ = pb.RegisterMyServiceHandlerClient(context.Background(), grpc.GetGatewayMux(), client)
+    client := pb.NewMyServiceClient(g.GatewayConn("my-service"))
+    _ = pb.RegisterMyServiceHandlerClient(context.Background(), g.Mux(), client)
 
     app.Run()
 }
@@ -122,8 +122,8 @@ func main() {
     redis_tool.SetManualInit()
     config.RegistryApolloNeedParseNamespace(conf.ConfigKey)
 
-    app := uapp.NewApp("my-cron-service",
-        cron.WithService(),  // 启用 cron 服务
+    app := uapp.New("my-cron-service",
+        uapp.WithZappOptions(cron.WithService()),  // 启用 cron 服务
     )
     defer app.Exit()
 
@@ -206,7 +206,7 @@ func main() {
     redis_tool.SetManualInit()
     config.RegistryApolloNeedParseNamespace(conf.ConfigKey)
 
-    app := uapp.NewApp("my-worker")
+    app := uapp.New("my-worker")
     defer app.Exit()
 
     if err := conf.Init(); err != nil {
@@ -675,7 +675,7 @@ ENTRYPOINT ["./server"]
 
 ### 只加 Cron 定时任务
 
-1. 在 `main.go` 的 `uapp.NewApp()` 中添加 `cron.WithService()`
+1. 在 `main.go` 的 `uapp.New()` 中添加 `uapp.WithZappOptions(cron.WithService())`
 2. 在 `configs/default.yaml` 添加 `services.cron` 配置
 3. 用 `cron.RegistryHandler()` 注册任务
 
@@ -687,9 +687,9 @@ ENTRYPOINT ["./server"]
 ### 只加 gRPC 服务
 
 1. 定义 proto 文件并生成代码
-2. 在 `main.go` 添加 `grpc.WithService()` 和 `grpc.WithGatewayService()`
-3. 在 `configs/default.yaml` 添加 `services.grpc` 和 `services.grpc-gateway` 配置
-4. 注册 gRPC 服务端和 Gateway
+2. 在 `main.go` 用 `g := grpc.New(grpc.WithServer(), grpc.WithGateway())` 构造组合根，并把它交给 `uapp.WithZappOptions(g.Options()...)`
+3. 在 `configs/default.yaml` 添加 `services.grpc.<serverName>` 和 `services.grpc-gateway` 配置
+4. 用 `g.Server(name)` / `g.GatewayConn(name)` / `g.Mux()` 注册 gRPC 服务端和 Gateway
 
 ### 只加 LoopLoad
 
@@ -717,7 +717,7 @@ ENTRYPOINT ["./server"]
 ### 只加 redis_tool 分布式锁与原子操作
 
 1. 确保已配置 Redis 组件
-2. 在 `main.go` 的 `uapp.NewApp()` **之前**调用 `redis_tool.SetManualInit()`
+2. 在 `main.go` 的 `uapp.New()` **之前**调用 `redis_tool.SetManualInit()`
 3. 在配置加载完成后调用 `redis_tool.RedisClientName = "default"; redis_tool.ManualInit()`
 4. 代码中使用 `redis_tool.AutoLock()`/`redis_tool.Lock()` 或 `redis_tool.CompareAndSwap()`/`redis_tool.CompareAndDel()`/`redis_tool.CompareAndExpire()`
 
@@ -728,13 +728,11 @@ ENTRYPOINT ["./server"]
 ### 组合1: API 服务 (gRPC + Redis + MySQL + Cache)
 
 ```go
-app := uapp.NewApp("my-api",
-    grpc.WithService(),
-    grpc.WithGatewayService(),
-)
+g := grpc.New(grpc.WithServer(), grpc.WithGateway())
+app := uapp.New("my-api", uapp.WithZappOptions(g.Options()...))
 ```
 
-配置需要: `components.redis`, `components.sqlx`, `components.cache`, `services.grpc`, `services.grpc-gateway`
+配置需要: `components.redis`, `components.sqlx`, `components.cache`, `services.grpc.<serverName>`, `services.grpc-gateway`
 
 ### 组合2: 数据处理服务 (gpool + Redis + LoopLoad + Cron)
 
@@ -753,8 +751,8 @@ var dataLoader = loopload.New[map[string]string]("data-loader",
     loopload.WithReloadTime(5*time.Minute),
 )
 
-app := uapp.NewApp("my-processor",
-    cron.WithService(),
+app := uapp.New("my-processor",
+    uapp.WithZappOptions(cron.WithService()),
 )
 ```
 
@@ -774,7 +772,7 @@ msgbus.Subscribe("order.created", 2, func(ctx context.Context, msg msgbus.IMsgbu
     // 处理事件
 })
 
-app := uapp.NewApp("my-event-service")
+app := uapp.New("my-event-service")
 ```
 
 配置需要: `components.cache`, `components.gpool`
@@ -787,10 +785,10 @@ import (
     "github.com/zly-app/plugin/prometheus"
 )
 
-app := uapp.NewApp("my-service",
-    grpc.WithService(),
-    grpc.WithGatewayService(),
-    prometheus.WithPlugin(),
+g := grpc.New(grpc.WithServer(), grpc.WithGateway())
+app := uapp.New("my-service",
+    uapp.WithZappOptions(g.Options()...),
+    uapp.WithZappOptions(prometheus.WithPlugin()),
 )
 ```
 

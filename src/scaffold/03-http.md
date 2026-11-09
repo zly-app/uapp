@@ -15,7 +15,7 @@
 ### 1. 替换标准库 (uapp 默认已启用)
 
 ```go
-// uapp.NewApp() 内部已自动调用，无需手动
+// uapp.New() 内部已自动调用，无需手动
 http.ReplaceStd()
 ```
 

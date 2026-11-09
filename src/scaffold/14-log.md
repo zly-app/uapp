@@ -37,24 +37,24 @@ import (
     "go.uber.org/zap"
 )
 
-// 使用 zap 字段
+// 字段直接用 zap 构造器（log 包本身不提供字段函数）
 log.Info("用户登录",
-    log.String("user", "张三"),
-    log.Int64("uid", 12345),
-    log.Bool("vip", true),
-    log.ErrField(err),  // 或使用 ErrField
+    zap.String("user", "张三"),
+    zap.Int64("uid", 12345),
+    zap.Bool("vip", true),
+    zap.Error(err),
 )
 
-// 可用字段函数（与 zap 一致）
-log.String("key", "value")
-log.Int("key", 123)
-log.Int64("key", 123456)
-log.Float64("key", 3.14)
-log.Bool("key", true)
-log.ErrField(err)   // 错误字段别名
-log.Any("key", value)
-log.Time("key", time.Now())
-log.Duration("key", time.Second)
+// 可用字段函数（来自 go.uber.org/zap）
+zap.String("key", "value")
+zap.Int("key", 123)
+zap.Int64("key", 123456)
+zap.Float64("key", 3.14)
+zap.Bool("key", true)
+zap.Error(err)
+zap.Any("key", value)
+zap.Time("key", time.Now())
+zap.Duration("key", time.Second)
 ```
 
 ### 3. 带链路追踪的日志
@@ -85,18 +85,18 @@ import (
 
 // 创建会话日志（每次请求生成唯一 logId，便于追踪）
 var sessionLog core.ILogger = log.Log.NewSessionLogger(
-    log.String("request_id", "abc123"),
+    zap.String("request_id", "abc123"),
 )
 
 // 使用会话日志
 sessionLog.Info("请求开始")
-sessionLog.Info("请求处理中", log.Int("step", 2))
+sessionLog.Info("请求处理中", zap.Int("step", 2))
 sessionLog.Info("请求结束")
 
 // 创建带 trace 的日志
 func handler(ctx context.Context) {
     traceLog := log.Log.NewTraceLogger(ctx,
-        log.String("module", "user"),
+        zap.String("module", "user"),
     )
     traceLog.Info("处理中")
 }

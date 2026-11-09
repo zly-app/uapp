@@ -65,7 +65,7 @@ func main() {
     // 在 NewApp 之前设置手动初始化
     redis_tool.SetManualInit()
 
-    app := uapp.NewApp("my-service", ...)
+    app := uapp.New("my-service", ...)
 
     // 配置加载完成后手动初始化
     redis_tool.RedisClientName = conf.Conf.RedisName

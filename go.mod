@@ -8,14 +8,14 @@ require (
 	github.com/zly-app/component/http v0.0.0-20251201104934-96e59c17144e
 	github.com/zly-app/plugin/otlp v0.0.0-20251201105815-b4c372b9135e
 	github.com/zly-app/plugin/pprof v0.0.0-20251201105815-b4c372b9135e
-	github.com/zly-app/zapp v1.4.3
+	github.com/zly-app/zapp v1.4.6
 	go.uber.org/zap v1.27.0
 )
 
 require (
 	github.com/bytedance/gopkg v0.1.3 // indirect
-	github.com/bytedance/sonic v1.14.2 // indirect
-	github.com/bytedance/sonic/loader v0.4.0 // indirect
+	github.com/bytedance/sonic v1.15.5 // indirect
+	github.com/bytedance/sonic/loader v0.5.3 // indirect
 	github.com/cenkalti/backoff/v5 v5.0.3 // indirect
 	github.com/cloudwego/base64x v0.1.6 // indirect
 	github.com/ebitengine/purego v0.8.4 // indirect

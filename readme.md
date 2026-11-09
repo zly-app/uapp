@@ -29,14 +29,33 @@ apollo配置等功能.
 
 # 开始
 
-使用和 `zapp` 没什么区别
+使用和 `zapp` 没什么区别：
 
 ```go
-app := uapp.NewApp("zapp.test")
+app := uapp.New("my-service")
 defer app.Exit()
 
 app.Run()
 ```
+
+需要接入其他框架（例如 grpc 组合根）时，把它的选项经 `WithZappOptions` 传入：
+
+```go
+g := grpc.New(grpc.WithServer(), grpc.WithGateway())
+app := uapp.New("my-service", uapp.WithZappOptions(g.Options()...))
+defer app.Exit()
+```
+
+## 选项
+
+| 选项 | 说明 |
+|------|------|
+| `WithoutDefaultPlugins()` | 不启用默认插件（pprof / otlp） |
+| `WithoutDaemon()` | 不启用守护进程 |
+| `WithoutHTTPClientReplace()` | 不替换 `http.DefaultClient` / `http.DefaultTransport` |
+| `WithApolloConfig(cfg)` | 显式指定 Apollo 参数，覆盖环境变量 |
+| `WithConfigFiles(files...)` | 覆盖默认配置文件候选列表 |
+| `WithZappOptions(opts...)` | 追加 zapp 选项 |
 
 # 提供的功能
 
@@ -105,7 +124,7 @@ app.Run()
 | ApolloNamespaces              | 否       | 其他自定义命名空间                                                                                     |           |
 | ApolloIgnoreNamespaceNotFound | 否       | 忽略其他自定义命名空间不存在                                                                           |           |
 
-环境配置完成后就可以启动程序了. 当然, 可以使用命令行来覆盖环境变量的值. 如 `myapp -ApolloAddress="http://localhost:8080"`
+环境变量是默认来源。需要命令行覆盖或代码内固定时，用 `uapp.WithApolloConfig(&uapp.ApolloConfig{Address: "http://localhost:8080"})` 显式传入——uapp 不再注册自己的命令行参数（`-c` / `-t` 仍由 zapp 处理）。
 
 程序启动时 `uapp` 读取`${ApolloUAppID}`对应的apollo配置作为 `uapp配置`. 然后读取`${ApolloAppId}`对应的apollo配置作为`应用配置`, 如果有重复配置则 `应用配置`会覆盖掉 `uapp配置`. 相当于 `uapp` 的配置作为一个基础配置数据, 而`应用配置`能做个性化的变更.
 
@@ -168,3 +187,13 @@ app.Run()
 ## 工具索引
 
 详细说明、完整工具列表、关键词索引、场景指南 → **[开发规范总览](src/scaffold/00-overview.md)**
+
+# 从旧版迁移（不兼容）
+
+| 旧 | 新 |
+|---|---|
+| `uapp.NewApp(name, opts...)` | `uapp.New(name, uapp.WithZappOptions(opts...))` |
+| `uapp.NewAppNotPlugins(name, opts...)` | `uapp.New(name, uapp.WithoutDefaultPlugins(), uapp.WithZappOptions(opts...))` |
+| `-ApolloAddress=...` 等命令行参数 | 环境变量，或 `uapp.WithApolloConfig(...)` |
+| `grpc.WithService()` / `grpc.WithGatewayService()` | `grpc.New(grpc.WithServer(), grpc.WithGateway())` + `uapp.WithZappOptions(g.Options()...)` |
+| `grpc.Server()` / `grpc.GetClientConn()` / `grpc.GetGatewayMux()` | `g.Server()` / `g.ClientConn()` / `g.Mux()`（grpc 组合根） |

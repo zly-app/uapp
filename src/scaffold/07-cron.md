@@ -36,8 +36,8 @@ services:
 ```go
 import "github.com/zly-app/service/cron"
 
-app := uapp.NewApp("my-service",
-    cron.WithService(),  // 启用 cron 服务
+app := uapp.New("my-service",
+    uapp.WithZappOptions(cron.WithService()),  // 启用 cron 服务
 )
 ```
 
@@ -109,8 +109,8 @@ func init() {
 }
 
 func main() {
-    app := uapp.NewApp("my-service",
-        cron.WithService(),
+    app := uapp.New("my-service",
+        uapp.WithZappOptions(cron.WithService()),
     )
     defer app.Exit()
     app.Run()
