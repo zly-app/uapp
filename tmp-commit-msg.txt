@@ -1,9 +1,0 @@
-fix: 交给 zapp 的 viper 换回默认 KeyDelimiter
-
-内部 viper 用自定义 delimiter 是为了 apollo 命名空间 key（frame.yaml）不被拆成层级，
-但这份 viper 直接交给 zapp 后，UnmarshalKey 的点路径全部失效，
-表现为配置写了却走默认值（插件不启用、服务 Bind 被默认端口覆盖）。
-
-- 新增 normalize：用 AllSettings 转到默认点分隔符的新 viper，命名空间 key 仍作为整体保留
-- Resolve 的两个返回分支都走 normalize
-- 补行为测试：文件配置的 plugins.pprof / services 可被 UnmarshalKey 读到，命名空间 key 不丢失
