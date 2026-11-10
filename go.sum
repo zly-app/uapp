@@ -325,6 +325,8 @@ github.com/zly-app/plugin/otlp v0.0.0-20251201105815-b4c372b9135e h1:dMUVOspYFGV
 github.com/zly-app/plugin/otlp v0.0.0-20251201105815-b4c372b9135e/go.mod h1:PM30ztb4rxLcxl1dcB7WodNxRQgaZs0YXEEQRTULnd0=
 github.com/zly-app/plugin/otlp v0.1.0 h1:w0ZDBjG1+od1PA2lhb+1od8LLDh+crnMDfCJ0kwnUeE=
 github.com/zly-app/plugin/otlp v0.1.0/go.mod h1:vNxbEEPmIee61x1roPoNdyB0bDFyLeJxuPVHiqxoGgM=
+github.com/zly-app/plugin/otlp v0.1.1 h1:o7RUq2FjVn0AaX3PKVUeL+io4fmVwpZ2iO6Ytf5pR/U=
+github.com/zly-app/plugin/otlp v0.1.1/go.mod h1:vNxbEEPmIee61x1roPoNdyB0bDFyLeJxuPVHiqxoGgM=
 github.com/zly-app/plugin/pprof v0.0.0-20251201105815-b4c372b9135e h1:RB1VUYrKTaCO59yePxd+llmyX4I/zFzB00D9Ocnulv8=
 github.com/zly-app/plugin/pprof v0.0.0-20251201105815-b4c372b9135e/go.mod h1:VoGzG+6ivB+wSi1tK8Q3/+U9VPZeHv4NZj7QdBuyEVo=
 github.com/zly-app/zapp v1.4.6 h1:kPTiGdFdQ3zSjOhNUFb8zWAAVRRp0HeRghUI1iDpI88=
