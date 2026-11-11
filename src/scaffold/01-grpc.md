@@ -6,9 +6,9 @@
 
 - **gRPC 服务端**: 启动 gRPC 服务器，自动集成 trace/metrics/日志/数据校验
 - **gRPC-Gateway**: HTTP → gRPC 代理，对外提供 RESTful API
-- **gRPC 客户端**: 连接池管理，支持服务发现和负载均衡
+- **gRPC 客户端**: 单条惰性 ClientConn（无连接池），支持服务发现与负载均衡
 - **服务注册/发现**: 支持 static/redis 等注册中心
-- **负载均衡**: round_robin / weight_random / weight_hash / weight_consistent_hash
+- **负载均衡**: 5 个策略（`zly_` 前缀），默认 P2C（带延迟感知与失败降权）
 
 ## 配置
 
@@ -49,7 +49,8 @@ services:
 ```
 
 > `ByHeader` 留空的规则表示该 path 显式不参与 hash；`Path` 必须以 `/` 开头且不可重复，
-> 配置错误启动即失败。只有 `weight_hash` / `weight_consistent_hash` 均衡器会使用该 key。
+> 配置错误启动即失败。只有 `zly_weight_hash` / `zly_weight_consistent_hash` 均衡器会使用该 key
+> （默认的 P2C 不读 hashKey）。
 
 ### 网关响应结构说明
 
@@ -107,7 +108,7 @@ components:
 
 | `Balance` | 规则 |
 |---|---|
-| `zly_least_request` | 默认。P2C：抽两个实例，选「在途请求数 / 权重」更低的 |
+| `zly_least_request` | 默认。P2C：抽两个实例，选「延迟 × (在途+1) / 权重」更低的；连续失败 3 次的实例先出局 |
 | `zly_weight_consistent_hash` | ketama 一致性 hash；带 hashKey 时按 key 固定实例，扩缩容只迁移 1/N |
 | `zly_weight_hash` | 加权 hash；带 hashKey 时按 key 固定实例，但**扩缩容会全量重映射** |
 | `zly_weight_random` | 加权随机 |
