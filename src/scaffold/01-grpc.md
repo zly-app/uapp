@@ -41,7 +41,15 @@ services:
     Bind: ":8080"                    # HTTP 网关监听地址
     CloseWait: 3                     # 退出等待秒数
     CorsAllowAll: true               # 允许所有跨域
+    HashKey:                         # 一致性 hash key 规则，可省略
+      ByHeader: x-user-id            # 默认来源；省略则不注入 hashKey
+      Rules:                         # 按 path 覆盖默认来源
+        - Path: /hello/say           # grpc-gateway 注册的路径模板
+          ByHeader: x-hash-key
 ```
+
+> `ByHeader` 留空的规则表示该 path 显式不参与 hash；`Path` 必须以 `/` 开头且不可重复，
+> 配置错误启动即失败。只有 `weight_hash` / `weight_consistent_hash` 均衡器会使用该 key。
 
 ### 网关响应结构说明
 
