@@ -281,7 +281,7 @@ components:
   # gRPC 客户端
   grpc:
     my-backend-service:
-      address: "localhost:3300"
+      address: "localhost:3300"  # host:port[,host:port] 或 redis://<组件名>
       balance: "weight_consistent_hash"
       minIdle: 2
       maxIdle: 4
@@ -311,10 +311,11 @@ components:
 services:
   # gRPC 服务端
   grpc:
-    bind: ":3300"
-    heartbeatTime: 20
-    reqDataValidate: true
-    registryAddress: "static"
+    my-service:                # server 名称，与 g.Server("<name>") 一致
+      bind: ":3300"
+      heartbeatTime: 20
+      reqDataValidate: true
+      registryAddress: "static"  # static 或 redis://<组件名>
 
   # gRPC-Gateway
   grpc-gateway:

@@ -25,7 +25,7 @@ services:
       ReqDataValidate: true          # 请求数据校验
       ReqDataValidateAllField: false # 校验所有字段并返回全部错误
       SendDetailedErrorInProduction: false  # 生产环境返回详细错误
-      RegistryAddress: "static"      # static 或 redis://<组件名>
+      RegistryAddress: "static"      # 注册来源：static 或 redis://<组件名>
       PublishName: ""                # 公告名
       PublishAddress: ""             # 公告地址
       PublishWeight: 100             # 公告权重
@@ -98,7 +98,7 @@ HTTP 客户端实际收到的 JSON：
 components:
   grpc:
     my-service:                      # 客户端名称
-      address: "localhost:3300"      # 服务地址
+      Address: "localhost:3300"      # 服务地址：host:port[,host:port] 或 redis://<组件名>
       balance: "weight_consistent_hash"  # 均衡器
       minIdle: 2                     # 最小闲置连接
       maxIdle: 4                     # 最大闲置连接
