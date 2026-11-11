@@ -278,14 +278,11 @@ components:
       maxIdleConns: 3
       maxOpenConns: 10
 
-  # gRPC 客户端
+  # gRPC 客户端（无连接池：一条 ClientConn 多路复用，连接数 = 实例数）
   grpc:
     my-backend-service:
       address: "localhost:3300"  # host:port[,host:port] 或 redis://<组件名>
-      balance: "weight_consistent_hash"
-      minIdle: 2
-      maxIdle: 4
-      maxActive: 10
+      balance: "zly_least_request"  # 默认 P2C，可不写
 
   # 缓存
   cache:

@@ -99,14 +99,21 @@ components:
   grpc:
     my-service:                      # 客户端名称
       Address: "localhost:3300"      # 服务地址：host:port[,host:port] 或 redis://<组件名>
-      balance: "weight_consistent_hash"  # 均衡器
-      minIdle: 2                     # 最小闲置连接
-      maxIdle: 4                     # 最大闲置连接
-      maxActive: 10                  # 最大活跃连接
-      waitTimeout: 3                 # 等待超时(秒)
-      connectTimeout: 5              # 连接超时(秒)
-      idleTimeout: 3600              # 闲置超时(秒)
+      Balance: "zly_least_request"   # 均衡器，可不写；可选值见下表
 ```
+
+> 客户端**没有连接池**：gRPC 的 ClientConn 本身就按 HTTP/2 流多路复用，连接数等于实例数，
+> 由 `Balance` 指定的均衡器负责分散。旧版配置里的 `minIdle` / `maxActive` 等字段已移除，写了会被忽略。
+
+| `Balance` | 规则 |
+|---|---|
+| `zly_least_request` | 默认。P2C：抽两个实例，选「在途请求数 / 权重」更低的 |
+| `zly_weight_consistent_hash` | ketama 一致性 hash；带 hashKey 时按 key 固定实例，扩缩容只迁移 1/N |
+| `zly_weight_hash` | 加权 hash；带 hashKey 时按 key 固定实例，但**扩缩容会全量重映射** |
+| `zly_weight_random` | 加权随机 |
+| `zly_round_robin` | 轮询 |
+
+hashKey 由网关从请求头取值（见网关 `HashKey` 配置）；只有两个 hash 类策略会用到它。
 
 ## 编译 Proto 文件
 
